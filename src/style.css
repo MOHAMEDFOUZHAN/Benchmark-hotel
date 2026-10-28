@@ -150,6 +150,16 @@
 }
 
 /* 3D Orbit Showcase Styles */
+.orbit-container {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.orbit-item {
+  will-change: transform, opacity, filter;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
 .orbit-perspective-stage {
   perspective: 1500px;
   perspective-origin: 50% 42%;
