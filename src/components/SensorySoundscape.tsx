@@ -257,11 +257,11 @@ export const SensorySoundscape: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 select-none">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 select-none">
       <div className="relative">
         {/* Expanded Sound Selector Popover */}
         {isExpanded && (
-          <div className="absolute bottom-14 right-0 w-80 p-4 rounded-lg bg-white border border-[#E7DED0] shadow-[0_12px_35px_rgba(41,36,31,0.15)] space-y-3.5 text-[#29241F] animate-fadeIn">
+          <div className="absolute bottom-14 right-0 w-[calc(100vw-32px)] max-w-xs sm:w-80 p-4 rounded-xl bg-white border border-[#E7DED0] shadow-[0_12px_35px_rgba(41,36,31,0.15)] space-y-3.5 text-[#29241F] animate-fadeIn">
             <div className="flex items-center justify-between pb-2 border-b border-[#E7DED0]">
               <div className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#A77D4B]" />

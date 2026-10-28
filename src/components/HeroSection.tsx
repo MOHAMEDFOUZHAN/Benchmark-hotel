@@ -129,20 +129,20 @@ export const HeroSection: React.FC = () => {
             </span>
           </div>
 
-          <h1 className="text-5xl sm:text-6xl md:text-8xl font-normal font-serif-luxury leading-[0.96] tracking-tight drop-shadow-lg">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-normal font-serif-luxury leading-[1.02] sm:leading-[0.96] tracking-tight drop-shadow-lg">
             Where Blue Mountains <br />
             <span className="italic font-light text-[#E7DED0]">meet eternal mist.</span>
           </h1>
 
-          <p className="text-base sm:text-lg md:text-xl text-[#F7F4EE]/90 max-w-2xl font-light leading-relaxed drop-shadow">
+          <p className="text-sm sm:text-base md:text-xl text-[#F7F4EE]/90 max-w-2xl font-light leading-relaxed drop-shadow">
             {activeScene.subtitle}
           </p>
 
-          {/* Primary High-Contrast Buttons — Never dark-on-dark! */}
-          <div className="pt-2 flex flex-wrap items-center gap-4">
+          {/* Primary High-Contrast Buttons — Mobile Full-Width Touch Friendly */}
+          <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <button
               onClick={() => document.getElementById('suites')?.scrollIntoView({ behavior: 'smooth' })}
-              className="py-4 px-8 rounded bg-[#F7F4EE] hover:bg-white text-[#29241F] text-xs font-bold tracking-[0.2em] uppercase transition-all shadow-[0_4px_25px_rgba(0,0,0,0.3)] hover:scale-105 active:scale-95 flex items-center gap-2.5"
+              className="py-3.5 sm:py-4 px-7 rounded bg-[#F7F4EE] hover:bg-white text-[#29241F] text-xs font-bold tracking-[0.2em] uppercase transition-all shadow-[0_4px_25px_rgba(0,0,0,0.3)] hover:scale-105 active:scale-95 flex items-center justify-center gap-2.5"
             >
               <span>Explore The Suites</span>
               <ArrowRight className="w-4 h-4 text-[#A77D4B]" />
@@ -150,7 +150,7 @@ export const HeroSection: React.FC = () => {
 
             <button
               onClick={handleExplorePenthouse3D}
-              className="py-4 px-7 rounded bg-[#29241F]/80 hover:bg-[#29241F] text-[#F7F4EE] border border-white/40 hover:border-white backdrop-blur-md text-xs font-semibold tracking-[0.18em] uppercase transition-all flex items-center gap-2 shadow-lg"
+              className="py-3.5 sm:py-4 px-6 rounded bg-[#29241F]/80 hover:bg-[#29241F] text-[#F7F4EE] border border-white/40 hover:border-white backdrop-blur-md text-xs font-semibold tracking-[0.18em] uppercase transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95"
             >
               <Eye className="w-4 h-4 text-[#A77D4B]" />
               <span>Launch 3D Room Tour</span>

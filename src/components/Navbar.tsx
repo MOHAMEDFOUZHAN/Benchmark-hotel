@@ -131,17 +131,32 @@ export const Navbar: React.FC = () => {
           )}
         </div>
 
-        {/* Mobile Toggle */}
-        <div className="flex sm:hidden items-center gap-3">
+        {/* Mobile Toggle & Quick Actions */}
+        <div className="flex sm:hidden items-center gap-2">
+          {currentView === 'guest' && (
+            <button
+              onClick={() => {
+                const featured = rooms.find(r => r.isFeatured) || rooms[0];
+                setSelectedRoomForBooking(featured);
+              }}
+              className="py-1.5 px-3 rounded bg-[#29241F] text-white text-[10px] font-semibold uppercase tracking-wider shadow-sm active:scale-95"
+            >
+              Reserve
+            </button>
+          )}
+
           <button
             onClick={() => setIsLookupModalOpen(true)}
-            className="p-2 text-[#29241F]"
+            aria-label="My Reservation"
+            className="p-2 text-[#29241F] hover:text-[#A77D4B] transition-colors"
           >
             <Key className="w-4 h-4" />
           </button>
+
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-[#29241F]"
+            aria-label="Toggle Navigation Menu"
+            className="p-2 text-[#29241F] hover:text-[#A77D4B] transition-colors"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -150,35 +165,44 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="sm:hidden bg-[#F7F4EE] border-b border-[#E7DED0] p-6 space-y-5 animate-fadeIn">
-          <nav className="flex flex-col gap-4 text-xs uppercase tracking-[0.18em] font-medium text-[#29241F]">
+        <div className="sm:hidden bg-[#F7F4EE] border-b border-[#E7DED0] p-6 space-y-5 animate-fadeIn shadow-lg">
+          <nav className="flex flex-col gap-3 text-xs uppercase tracking-[0.18em] font-medium text-[#29241F]">
             <button
-              onClick={() => scrollToSection('suites')}
-              className="text-left py-2 border-b border-[#E7DED0]"
+              onClick={() => scrollToSection('tower-explorer')}
+              className="text-left py-2.5 border-b border-[#E7DED0] flex items-center justify-between"
             >
-              Suites & Villas
+              <span>Tower Elevation</span>
+              <span className="text-[10px] font-mono text-[#A77D4B]">50 Fl</span>
             </button>
             <button
-              onClick={() => scrollToSection('3d-tour')}
-              className="text-left py-2 border-b border-[#E7DED0]"
+              onClick={() => scrollToSection('suites')}
+              className="text-left py-2.5 border-b border-[#E7DED0] flex items-center justify-between"
             >
-              3D Suite Tour
+              <span>Suites & Villas</span>
+              <span className="text-[10px] font-mono text-[#A77D4B]">3D Orbit</span>
+            </button>
+            <button
+              onClick={() => scrollToSection('curator')}
+              className="text-left py-2.5 border-b border-[#E7DED0] flex items-center justify-between font-semibold text-[#A77D4B]"
+            >
+              <span>Stay Curator</span>
+              <span className="text-[10px] font-mono text-[#A77D4B]">Custom</span>
             </button>
             <button
               onClick={() => scrollToSection('dining-wellness')}
-              className="text-left py-2 border-b border-[#E7DED0]"
+              className="text-left py-2.5 border-b border-[#E7DED0]"
             >
               Dining & Wellness
             </button>
             <button
               onClick={() => scrollToSection('location')}
-              className="text-left py-2 border-b border-[#E7DED0]"
+              className="text-left py-2.5 border-b border-[#E7DED0]"
             >
               Location & Contact
             </button>
             <button
               onClick={() => scrollToSection('privileges')}
-              className="text-left py-2 border-b border-[#E7DED0]"
+              className="text-left py-2.5 border-b border-[#E7DED0]"
             >
               Privileges
             </button>
@@ -190,7 +214,7 @@ export const Navbar: React.FC = () => {
                 setMobileMenuOpen(false);
                 setIsLookupModalOpen(true);
               }}
-              className="w-full btn-outline-espresso text-center"
+              className="w-full btn-outline-espresso text-center py-2.5"
             >
               My Reservation / Keycard
             </button>
@@ -200,9 +224,9 @@ export const Navbar: React.FC = () => {
                 setMobileMenuOpen(false);
                 setCurrentView(currentView === 'admin' ? 'guest' : 'admin');
               }}
-              className="w-full text-center text-xs font-mono text-[#777066] py-2"
+              className="w-full text-center text-xs font-mono text-[#777066] py-2 hover:text-[#29241F]"
             >
-              {currentView === 'admin' ? 'Switch to Guest Site' : 'Hotel Admin Portal'}
+              {currentView === 'admin' ? '← Switch to Guest Site' : 'Hotel Admin Portal →'}
             </button>
           </div>
         </div>

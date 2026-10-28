@@ -30,6 +30,8 @@ export const RoomsShowcase: React.FC = () => {
   // Dragging & Momentum Physics Refs
   const isDraggingRef = useRef<boolean>(false);
   const startXRef = useRef<number>(0);
+  const startYRef = useRef<number>(0);
+  const touchDirectionRef = useRef<'horizontal' | 'vertical' | null>(null);
   const lastDragXRef = useRef<number>(0);
   const lastDragTimeRef = useRef<number>(0);
   const dragProgressOffsetRef = useRef<number>(0);
@@ -88,8 +90,20 @@ export const RoomsShowcase: React.FC = () => {
 
     const updateRadius = () => {
       const isMobile = window.innerWidth < 768;
-      radius = isMobile ? Math.min(window.innerWidth * 0.40, 220) : 440;
-      const itemWidth = isMobile ? 220 : 290;
+      const isSmallMobile = window.innerWidth < 480;
+
+      // On mobile phones, radius keeps side cards stylishly peeking into frame without going off-screen
+      radius = isSmallMobile
+        ? Math.min(window.innerWidth * 0.24, 92)
+        : isMobile
+        ? Math.min(window.innerWidth * 0.32, 150)
+        : 440;
+
+      const itemWidth = isSmallMobile
+        ? Math.min(270, window.innerWidth - 44)
+        : isMobile
+        ? 260
+        : 290;
 
       gsap.set(items, {
         position: 'absolute',
@@ -239,26 +253,47 @@ export const RoomsShowcase: React.FC = () => {
       }
     };
 
-    // --- Touch handlers for mobile devices ---
+    // --- Touch handlers for mobile devices with directional scroll lock ---
     const onTouchStart = (e: TouchEvent) => {
       if ((e.target as HTMLElement).closest('button, a, input')) return;
       if (momentumRafRef.current) cancelAnimationFrame(momentumRafRef.current);
-      isDraggingRef.current = true;
       startXRef.current = e.touches[0].clientX;
+      startYRef.current = e.touches[0].clientY;
       lastDragXRef.current = startXRef.current;
       lastDragTimeRef.current = Date.now();
       dragDistanceRef.current = 0;
-      tl.pause();
+      touchDirectionRef.current = null;
+      isDraggingRef.current = false;
     };
 
     const onTouchMove = (e: TouchEvent) => {
-      if (!isDraggingRef.current) return;
       const touchX = e.touches[0].clientX;
+      const touchY = e.touches[0].clientY;
+      const deltaXTotal = Math.abs(touchX - startXRef.current);
+      const deltaYTotal = Math.abs(touchY - startYRef.current);
+
+      // Determine gesture direction on first significant movement (> 7px)
+      if (!touchDirectionRef.current && (deltaXTotal > 7 || deltaYTotal > 7)) {
+        if (deltaYTotal > deltaXTotal) {
+          // User is scrolling the page vertically! Do not hijack the touch
+          touchDirectionRef.current = 'vertical';
+          isDraggingRef.current = false;
+          return;
+        } else {
+          // User is swiping horizontally to spin the 3D orbit
+          touchDirectionRef.current = 'horizontal';
+          isDraggingRef.current = true;
+          tl.pause();
+        }
+      }
+
+      if (touchDirectionRef.current !== 'horizontal' || !isDraggingRef.current) return;
+
       const deltaX = touchX - lastDragXRef.current;
       dragDistanceRef.current += Math.abs(deltaX);
       const screenPercentage = deltaX / window.innerWidth;
 
-      dragProgressOffsetRef.current += screenPercentage * 0.5;
+      dragProgressOffsetRef.current += screenPercentage * 0.65;
       renderOrbit(tl.progress() + dragProgressOffsetRef.current);
 
       const now = Date.now();
@@ -272,8 +307,12 @@ export const RoomsShowcase: React.FC = () => {
     };
 
     const onTouchEnd = () => {
-      if (!isDraggingRef.current) return;
+      if (!isDraggingRef.current) {
+        touchDirectionRef.current = null;
+        return;
+      }
       isDraggingRef.current = false;
+      touchDirectionRef.current = null;
 
       if (Math.abs(spinVelocityRef.current) > 0.05) {
         applyMomentum();
@@ -477,25 +516,25 @@ export const RoomsShowcase: React.FC = () => {
           <div
             ref={viewportRef}
             id="orbit-viewport"
-            className="relative w-full h-[580px] md:h-[760px] flex items-center justify-center overflow-visible cursor-grab active:cursor-grabbing orbit-container select-none"
+            className="relative w-full h-[530px] sm:h-[640px] md:h-[760px] flex items-center justify-center overflow-visible cursor-grab active:cursor-grabbing orbit-container select-none"
           >
             {/* Large Luxury Branding Watermark in Absolute Background */}
             <div className="absolute z-0 text-center pointer-events-none opacity-15 md:opacity-20 select-none flex flex-col items-center justify-center">
-              <h3 className="text-7xl sm:text-9xl md:text-[13rem] font-extrabold tracking-[0.15em] leading-none font-serif-luxury bg-clip-text text-transparent bg-gradient-to-b from-[#A77D4B] to-[#29241F] drop-shadow-[0_8px_16px_rgba(167,125,75,0.12)]">
+              <h3 className="text-6xl sm:text-9xl md:text-[13rem] font-extrabold tracking-[0.15em] leading-none font-serif-luxury bg-clip-text text-transparent bg-gradient-to-b from-[#A77D4B] to-[#29241F] drop-shadow-[0_8px_16px_rgba(167,125,75,0.12)]">
                 BM
               </h3>
-              <p className="text-[10px] md:text-xs font-mono uppercase tracking-[0.35em] text-[#777066] mt-2">
+              <p className="text-[9px] sm:text-xs font-mono uppercase tracking-[0.35em] text-[#777066] mt-2">
                 BENCHMARK RESIDENCES • OOTY
               </p>
             </div>
 
             {/* Ambient Ground Pedestal Ring */}
             <div
-              className="absolute left-1/2 bottom-8 -translate-x-1/2 pointer-events-none rounded-full border border-[#A77D4B]/25 shadow-[0_0_80px_rgba(167,125,75,0.12)] w-[700px] h-[340px]"
+              className="absolute left-1/2 bottom-8 -translate-x-1/2 pointer-events-none rounded-full border border-[#A77D4B]/25 shadow-[0_0_80px_rgba(167,125,75,0.12)] w-[320px] sm:w-[520px] md:w-[700px] h-[180px] sm:h-[260px] md:h-[340px]"
               style={{ transform: 'rotateX(74deg)' }}
             >
-              <div className="absolute inset-4 rounded-full border border-dashed border-[#A77D4B]/20 animate-spin" style={{ animationDuration: '70s' }} />
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-[#A77D4B] shadow-[0_0_14px_#A77D4B] animate-pulse" />
+              <div className="absolute inset-3 sm:inset-4 rounded-full border border-dashed border-[#A77D4B]/20 animate-spin" style={{ animationDuration: '70s' }} />
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 sm:w-3.5 h-3 sm:h-3.5 rounded-full bg-[#A77D4B] shadow-[0_0_14px_#A77D4B] animate-pulse" />
             </div>
 
             {/* Rotating Items Wrapper */}
@@ -507,15 +546,15 @@ export const RoomsShowcase: React.FC = () => {
                 return (
                   <div
                     key={room.id}
-                    className="orbit-item absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px]"
+                    className="orbit-item absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[260px] sm:w-[280px] md:w-[290px]"
                   >
-                    <div className="bg-white rounded-[2.2rem] p-3 md:p-4 border border-[#29241F]/10 shadow-lg hover:shadow-2xl transition-all duration-500">
+                    <div className="bg-white rounded-[2rem] sm:rounded-[2.2rem] p-3 sm:p-4 border border-[#29241F]/10 shadow-lg hover:shadow-2xl transition-all duration-500">
                       {/* Product Image Area with Rounded Squircle */}
-                      <div className="relative aspect-[4/3] w-full rounded-3xl overflow-hidden bg-gradient-to-tr from-[#A77D4B]/10 to-[#E7DED0]/20 flex items-center justify-center">
+                      <div className="relative aspect-[16/11] sm:aspect-[4/3] w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-gradient-to-tr from-[#A77D4B]/10 to-[#E7DED0]/20 flex items-center justify-center">
                         {/* Wishlist Button */}
                         <button
                           onClick={(e) => toggleWish(room.id, e)}
-                          className={`absolute top-3 left-3 p-2 border border-black/5 rounded-full transition-all hover:scale-105 active:scale-95 shadow-sm z-30 ${
+                          className={`absolute top-2.5 left-2.5 p-2 border border-black/5 rounded-full transition-all hover:scale-105 active:scale-95 shadow-sm z-30 ${
                             isLiked
                               ? 'bg-[#A77D4B] text-white'
                               : 'bg-white/90 text-[#29241F] hover:text-[#A77D4B]'
@@ -526,8 +565,8 @@ export const RoomsShowcase: React.FC = () => {
                         </button>
 
                         {/* Top Category Badge */}
-                        <div className="absolute top-3 right-3 z-20">
-                          <span className="px-2.5 py-1 rounded-full bg-[#29241F]/80 backdrop-blur-md text-[9px] uppercase tracking-widest font-mono text-[#F7F4EE]">
+                        <div className="absolute top-2.5 right-2.5 z-20">
+                          <span className="px-2 py-0.5 rounded-full bg-[#29241F]/80 backdrop-blur-md text-[8px] sm:text-[9px] uppercase tracking-widest font-mono text-[#F7F4EE]">
                             {room.category}
                           </span>
                         </div>
@@ -574,14 +613,14 @@ export const RoomsShowcase: React.FC = () => {
                       </div>
 
                       {/* Card Content */}
-                      <div className="p-3 md:p-4 bg-gradient-to-b from-transparent to-[#A77D4B]/5 rounded-b-[2rem] space-y-2.5">
-                        <div className="flex items-center justify-between text-[9px] font-mono text-[#777066] uppercase tracking-wider">
+                      <div className="p-2.5 sm:p-4 bg-gradient-to-b from-transparent to-[#A77D4B]/5 rounded-b-[1.8rem] sm:rounded-b-[2rem] space-y-2">
+                        <div className="flex items-center justify-between text-[8px] sm:text-[9px] font-mono text-[#777066] uppercase tracking-wider">
                           <span className="font-bold text-[#A77D4B]">AVAILABLE</span>
                           <span>{room.sizeSqFt} SQ FT</span>
                           <span>{room.floor.split('(')[0]}</span>
                         </div>
 
-                        <h3 className="font-bold text-base md:text-lg text-[#29241F] leading-snug font-serif-luxury truncate">
+                        <h3 className="font-bold text-sm sm:text-base md:text-lg text-[#29241F] leading-snug font-serif-luxury truncate">
                           {room.name}
                         </h3>
 
@@ -590,38 +629,39 @@ export const RoomsShowcase: React.FC = () => {
                           {room.highlights.slice(0, 2).map((hl, hlIdx) => (
                             <span
                               key={hlIdx}
-                              className="px-2 py-0.5 rounded text-[9px] font-mono text-[#777066] bg-[#F7F4EE] border border-[#E7DED0] truncate max-w-[125px]"
+                              className="px-1.5 py-0.5 rounded text-[8px] sm:text-[9px] font-mono text-[#777066] bg-[#F7F4EE] border border-[#E7DED0] truncate max-w-[120px]"
                             >
                               {hl}
                             </span>
                           ))}
                         </div>
 
-                        {/* Price & Action Row */}
-                        <div className="pt-2 border-t border-[#E7DED0]/80 flex items-center justify-between gap-2">
-                          <div className="flex flex-col">
+                        {/* Price & Action Row (Optimized for Mobile Touch) */}
+                        <div className="pt-2 border-t border-[#E7DED0]/80 space-y-2">
+                          <div className="flex items-baseline justify-between">
                             <span className="text-[8px] uppercase tracking-widest text-[#777066] font-semibold">
                               RATE FROM
                             </span>
                             <div className="flex items-baseline">
                               <span className="rupee-symbol text-xs font-sans font-medium text-[#29241F] mr-0.5">₹</span>
-                              <span className="text-lg md:text-xl font-bold font-serif-luxury text-[#29241F]">
+                              <span className="text-base sm:text-lg md:text-xl font-bold font-serif-luxury text-[#29241F]">
                                 {formatINRNumber(room.pricePerNight)}
                               </span>
+                              <span className="text-[9px] sm:text-[10px] text-[#777066] font-light ml-0.5">/ night</span>
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-1.5">
+                          <div className="grid grid-cols-2 gap-2">
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setSelectedRoomFor3D(room);
                               }}
-                              className="p-2 md:px-2.5 md:py-2 rounded-xl border border-[#A77D4B]/40 text-[#A77D4B] hover:bg-[#A77D4B] hover:text-white transition-all text-[11px] font-medium flex items-center gap-1"
+                              className="py-2 px-2 rounded-xl border border-[#A77D4B]/40 text-[#A77D4B] hover:bg-[#A77D4B] hover:text-white transition-all text-[11px] sm:text-xs font-semibold flex items-center justify-center gap-1 min-h-[38px] active:scale-95"
                               title="Explore 3D Tour"
                             >
                               <Eye className="w-3.5 h-3.5" />
-                              <span className="hidden sm:inline">3D</span>
+                              <span>3D Tour</span>
                             </button>
 
                             <button
@@ -629,7 +669,7 @@ export const RoomsShowcase: React.FC = () => {
                                 e.stopPropagation();
                                 setSelectedRoomForBooking(room);
                               }}
-                              className="bg-[#29241F] text-white px-3 py-2 rounded-xl shadow-md hover:bg-[#A77D4B] active:scale-95 transition-all text-[11px] font-medium uppercase tracking-wider flex items-center gap-1"
+                              className="bg-[#29241F] text-white py-2 px-2.5 rounded-xl shadow-md hover:bg-[#A77D4B] active:scale-95 transition-all text-[11px] sm:text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1 min-h-[38px]"
                             >
                               <span>Reserve</span>
                               <ArrowRight className="w-3 h-3 text-[#A77D4B]" />
@@ -645,17 +685,18 @@ export const RoomsShowcase: React.FC = () => {
           </div>
 
           {/* Instruction Help Text */}
-          <div className="text-center text-xs uppercase tracking-widest text-[#777066]/70 font-semibold max-w-md mx-auto">
-            Hover to pause rotation. Grab and drag horizontally to spin in 3D!
+          <div className="text-center text-[10px] sm:text-xs uppercase tracking-widest text-[#777066]/70 font-semibold max-w-md mx-auto flex items-center justify-center gap-1.5 px-4">
+            <MoveHorizontal className="w-3.5 h-3.5 text-[#A77D4B]" />
+            <span>Swipe horizontally to spin in 3D • Tap suite to explore</span>
           </div>
 
-          {/* Bottom Direct Residence Stepper Selector */}
-          <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+          {/* Bottom Direct Residence Stepper Selector (Horizontally scrollable on mobile) */}
+          <div className="overflow-x-auto no-scrollbar flex items-center gap-2 py-2 px-2 sm:justify-center w-full">
             {filteredRooms.map((room, idx) => (
               <button
                 key={room.id}
                 onClick={() => spinToIndex(idx)}
-                className={`py-1.5 px-3 rounded text-[11px] font-mono transition-all border flex items-center gap-1.5 ${
+                className={`py-1.5 px-3 rounded-full text-[10px] sm:text-[11px] font-mono whitespace-nowrap transition-all border shrink-0 flex items-center gap-1.5 ${
                   idx === activeFrontIndex
                     ? 'bg-[#29241F] text-[#F7F4EE] border-[#29241F] font-semibold shadow-sm'
                     : 'bg-white text-[#777066] border-[#E7DED0] hover:border-[#29241F] hover:text-[#29241F]'

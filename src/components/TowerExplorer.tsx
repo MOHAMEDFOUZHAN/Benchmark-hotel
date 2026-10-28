@@ -164,13 +164,13 @@ export const TowerExplorer: React.FC = () => {
   };
 
   return (
-    <section id="tower-explorer" className="py-24 px-6 md:px-12 max-w-7xl mx-auto space-y-16 bg-[#F7F4EE]">
+    <section id="tower-explorer" className="py-16 md:py-24 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto space-y-12 md:space-y-16 bg-[#F7F4EE]">
       {/* Section Header */}
       <div className="max-w-2xl">
         <span className="text-[10px] uppercase tracking-[0.28em] text-[#A77D4B] font-semibold block mb-2 font-sans">
           Vertical Spatial Exploration • Charing Cross, Ooty
         </span>
-        <h2 className="text-4xl md:text-6xl font-normal font-serif-luxury text-[#29241F]">
+        <h2 className="text-3xl sm:text-4xl md:text-6xl font-normal font-serif-luxury text-[#29241F]">
           The Tower Elevation
         </h2>
         <p className="text-xs md:text-sm text-[#777066] mt-3 font-light leading-relaxed">
@@ -179,9 +179,9 @@ export const TowerExplorer: React.FC = () => {
       </div>
 
       {/* Main Architectural Tower Container */}
-      <div className="rounded-lg border border-[#E7DED0] bg-white shadow-sm overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[640px]">
+      <div className="rounded-xl border border-[#E7DED0] bg-white shadow-sm overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[600px]">
         {/* Left Column: Architectural Vertical Building Elevation Track */}
-        <div className="lg:col-span-5 p-6 md:p-8 bg-[#F7F4EE]/70 border-b lg:border-b-0 lg:border-r border-[#E7DED0] flex flex-col justify-between">
+        <div className="lg:col-span-5 p-4 sm:p-6 md:p-8 bg-[#F7F4EE]/70 border-b lg:border-b-0 lg:border-r border-[#E7DED0] flex flex-col justify-between">
           <div className="space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[#E7DED0]">
               <span className="text-[10px] uppercase font-mono tracking-wider text-[#777066]">
@@ -193,34 +193,34 @@ export const TowerExplorer: React.FC = () => {
             </div>
 
             {/* Vertical Floor Buttons (The Tower Spine) */}
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 max-h-[380px] lg:max-h-none overflow-y-auto no-scrollbar pr-0.5">
               {towerLevels.map((lvl) => {
                 const isSelected = lvl.id === activeLevelId;
                 return (
                   <button
                     key={lvl.id}
                     onClick={() => setActiveLevelId(lvl.id)}
-                    className={`w-full text-left p-3 rounded transition-all flex items-center justify-between border ${
+                    className={`w-full text-left p-2.5 sm:p-3 rounded-lg transition-all flex items-center justify-between gap-2 border ${
                       isSelected
                         ? 'bg-[#29241F] text-[#F7F4EE] border-[#29241F] shadow-sm'
                         : 'bg-white border-[#E7DED0] text-[#777066] hover:border-[#29241F] hover:text-[#29241F]'
                     }`}
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                       {/* Floor Indicator Badge */}
-                      <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded ${
+                      <span className={`text-[9px] sm:text-[10px] font-mono font-semibold px-2 py-0.5 rounded shrink-0 ${
                         isSelected ? 'bg-[#A77D4B] text-white' : 'bg-[#E7DED0]/60 text-[#29241F]'
                       }`}>
                         {lvl.floorLabel}
                       </span>
-                      <span className={`text-xs ${isSelected ? 'font-semibold text-white' : 'font-medium'}`}>
+                      <span className={`text-xs truncate ${isSelected ? 'font-semibold text-white' : 'font-medium'}`}>
                         {lvl.name}
                       </span>
                     </div>
 
-                    <div className="text-right">
+                    <div className="text-right shrink-0">
                       {lvl.pricePerNight ? (
-                        <span className={`text-xs font-mono ${isSelected ? 'text-[#E7DED0]' : 'text-[#A77D4B]'}`}>
+                        <span className={`text-xs font-mono font-medium ${isSelected ? 'text-[#E7DED0]' : 'text-[#A77D4B]'}`}>
                           {formatINR(lvl.pricePerNight)}
                         </span>
                       ) : (
@@ -235,12 +235,12 @@ export const TowerExplorer: React.FC = () => {
 
           <div className="pt-4 border-t border-[#E7DED0] text-[10px] text-[#777066] font-mono flex items-center justify-between">
             <span>50 Stories Total</span>
-            <span>Charing Cross Highland Promontory, Ooty</span>
+            <span>Charing Cross, Ooty</span>
           </div>
         </div>
 
         {/* Right Column: Selected Floor Spotlight Card */}
-        <div className="lg:col-span-7 flex flex-col justify-between p-6 md:p-10 bg-white">
+        <div className="lg:col-span-7 flex flex-col justify-between p-5 sm:p-8 md:p-10 bg-white">
           <div className="space-y-6">
             {/* Visual Header of Selected Level */}
             <div className="relative aspect-[16/9] rounded overflow-hidden border border-[#E7DED0] bg-[#E7DED0]">
@@ -313,12 +313,12 @@ export const TowerExplorer: React.FC = () => {
               )}
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-auto">
               {activeLevel.roomId && (
                 <>
                   <button
                     onClick={handleLaunch3DForActiveLevel}
-                    className="btn-outline-bronze flex items-center gap-1.5"
+                    className="btn-outline-bronze flex items-center justify-center gap-1.5 py-3"
                   >
                     <Eye className="w-3.5 h-3.5" />
                     <span>3D Suite Tour</span>
@@ -326,9 +326,9 @@ export const TowerExplorer: React.FC = () => {
 
                   <button
                     onClick={handleReserveActiveLevel}
-                    className="btn-primary-espresso flex items-center gap-1.5"
+                    className="btn-primary-espresso flex items-center justify-center gap-1.5 py-3"
                   >
-                    <span>Reserve on This Level</span>
+                    <span>Reserve on Level</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </>

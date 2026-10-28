@@ -126,15 +126,15 @@ export const BookingModal: React.FC<BookingModalProps> = ({ room, onClose }) => 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-[#29241F]/80 backdrop-blur-sm overflow-y-auto animate-fadeIn text-[#29241F]">
-      <div className="relative w-full max-w-4xl bg-white border border-[#E7DED0] rounded-lg overflow-hidden shadow-2xl my-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-8 bg-[#29241F]/80 backdrop-blur-sm overflow-y-auto animate-fadeIn text-[#29241F]">
+      <div className="relative w-full max-w-4xl bg-white border border-[#E7DED0] rounded-xl overflow-hidden shadow-2xl my-auto">
         {/* Modal Header */}
-        <div className="p-6 md:p-8 bg-[#F7F4EE] border-b border-[#E7DED0] flex items-center justify-between">
+        <div className="p-4 sm:p-6 md:p-8 bg-[#F7F4EE] border-b border-[#E7DED0] flex items-center justify-between">
           <div>
             <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#A77D4B] block">
               Reservation Procedure • Step 0{step} of 04
             </span>
-            <h2 className="text-2xl md:text-3xl font-normal font-serif-luxury text-[#29241F] mt-1">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-normal font-serif-luxury text-[#29241F] mt-1 truncate max-w-[260px] sm:max-w-none">
               {step === 4 ? 'Reservation Confirmed' : `Reserve ${room.name}`}
             </h2>
           </div>
@@ -142,30 +142,34 @@ export const BookingModal: React.FC<BookingModalProps> = ({ room, onClose }) => 
           <button
             onClick={onClose}
             aria-label="Close booking modal"
-            className="p-2 rounded bg-white hover:bg-[#E7DED0]/50 text-[#29241F] border border-[#E7DED0] transition-all"
+            className="p-2 rounded-lg bg-white hover:bg-[#E7DED0]/50 text-[#29241F] border border-[#E7DED0] transition-all"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Step Progress Bar */}
-        <div className="grid grid-cols-4 border-b border-[#E7DED0] text-[11px] font-medium text-center bg-[#F7F4EE]/50">
-          <div className={`py-3 border-b-2 transition-all ${step >= 1 ? 'border-[#29241F] text-[#29241F] font-semibold' : 'border-transparent text-[#777066]'}`}>
-            01. Dates & Add-ons
+        {/* Step Progress Bar (Responsive for Mobile) */}
+        <div className="grid grid-cols-4 border-b border-[#E7DED0] text-[10px] sm:text-[11px] font-medium text-center bg-[#F7F4EE]/50">
+          <div className={`py-2.5 sm:py-3 border-b-2 transition-all ${step >= 1 ? 'border-[#29241F] text-[#29241F] font-semibold' : 'border-transparent text-[#777066]'}`}>
+            <span className="sm:hidden">01. Dates</span>
+            <span className="hidden sm:inline">01. Dates & Add-ons</span>
           </div>
-          <div className={`py-3 border-b-2 transition-all ${step >= 2 ? 'border-[#29241F] text-[#29241F] font-semibold' : 'border-transparent text-[#777066]'}`}>
-            02. Guest Details
+          <div className={`py-2.5 sm:py-3 border-b-2 transition-all ${step >= 2 ? 'border-[#29241F] text-[#29241F] font-semibold' : 'border-transparent text-[#777066]'}`}>
+            <span className="sm:hidden">02. Details</span>
+            <span className="hidden sm:inline">02. Guest Details</span>
           </div>
-          <div className={`py-3 border-b-2 transition-all ${step >= 3 ? 'border-[#29241F] text-[#29241F] font-semibold' : 'border-transparent text-[#777066]'}`}>
-            03. Payment Method
+          <div className={`py-2.5 sm:py-3 border-b-2 transition-all ${step >= 3 ? 'border-[#29241F] text-[#29241F] font-semibold' : 'border-transparent text-[#777066]'}`}>
+            <span className="sm:hidden">03. Pay</span>
+            <span className="hidden sm:inline">03. Payment Method</span>
           </div>
-          <div className={`py-3 border-b-2 transition-all ${step === 4 ? 'border-[#29241F] text-[#29241F] font-semibold' : 'border-transparent text-[#777066]'}`}>
-            04. Keycard & Pass
+          <div className={`py-2.5 sm:py-3 border-b-2 transition-all ${step === 4 ? 'border-[#29241F] text-[#29241F] font-semibold' : 'border-transparent text-[#777066]'}`}>
+            <span className="sm:hidden">04. Pass</span>
+            <span className="hidden sm:inline">04. Keycard & Pass</span>
           </div>
         </div>
 
         {/* Content Body */}
-        <div className="p-6 md:p-8">
+        <div className="p-4 sm:p-6 md:p-8">
           {/* STEP 1: DATES & ADD-ONS */}
           {step === 1 && (
             <form onSubmit={handleNextStep1} className="space-y-6">

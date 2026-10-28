@@ -97,13 +97,13 @@ export const StayCurator: React.FC = () => {
   const matchedRoom = rooms.find(r => r.id === (dossier?.matchedRoomId || 'benchmark-penthouse')) || rooms[0];
 
   return (
-    <section id="curator" className="py-24 px-6 md:px-12 max-w-7xl mx-auto space-y-16 bg-[#F7F4EE]">
+    <section id="curator" className="py-16 md:py-24 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto space-y-12 md:space-y-16 bg-[#F7F4EE]">
       {/* Section Header */}
       <div className="max-w-2xl">
         <span className="text-[10px] uppercase tracking-[0.28em] text-[#A77D4B] font-semibold block mb-2 font-sans">
           Tailored Residential Matching
         </span>
-        <h2 className="text-4xl md:text-6xl font-normal font-serif-luxury text-[#29241F]">
+        <h2 className="text-3xl sm:text-4xl md:text-6xl font-normal font-serif-luxury text-[#29241F]">
           The Bespoke Stay Curator
         </h2>
         <p className="text-xs md:text-sm text-[#777066] mt-3 font-light leading-relaxed">
@@ -113,7 +113,7 @@ export const StayCurator: React.FC = () => {
 
       {!dossier ? (
         /* The Curator Questionnaire Interface */
-        <div className="p-8 md:p-12 rounded-lg bg-white border border-[#E7DED0] shadow-sm space-y-10">
+        <div className="p-5 sm:p-8 md:p-12 rounded-xl bg-white border border-[#E7DED0] shadow-sm space-y-8 sm:space-y-10">
           {/* Question 1: Travel Intent */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
@@ -219,10 +219,13 @@ export const StayCurator: React.FC = () => {
           </div>
 
           {/* Formulate Button */}
-          <div className="pt-6 border-t border-[#E7DED0] flex justify-end">
+          <div className="pt-6 border-t border-[#E7DED0] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+            <span className="text-xs text-[#777066] font-light">
+              Algorithm synthesizes 24 private residential variables and Nilgiri seasons.
+            </span>
             <button
               onClick={handleCurateStay}
-              className="btn-primary-espresso flex items-center gap-2"
+              className="btn-primary-espresso flex items-center justify-center gap-2 py-3.5 px-8"
             >
               <span>Formulate Bespoke Stay Dossier</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -231,9 +234,9 @@ export const StayCurator: React.FC = () => {
         </div>
       ) : (
         /* The Generated Personalized Stay Dossier */
-        <div className="rounded-lg bg-white border border-[#E7DED0] shadow-sm overflow-hidden animate-fadeIn space-y-8 p-8 md:p-12">
+        <div className="rounded-xl bg-white border border-[#E7DED0] shadow-sm overflow-hidden animate-fadeIn space-y-8 p-5 sm:p-8 md:p-12">
           {/* Header of Dossier */}
-          <div className="flex flex-col md:flex-row justify-between md:items-start gap-6 pb-6 border-b border-[#E7DED0]">
+          <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-4 pb-6 border-b border-[#E7DED0]">
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] uppercase font-mono tracking-widest text-[#A77D4B] font-semibold">
@@ -243,7 +246,7 @@ export const StayCurator: React.FC = () => {
                   {dossier.matchScore}% Resonance Match
                 </span>
               </div>
-              <h3 className="text-3xl md:text-5xl font-normal font-serif-luxury text-[#29241F] mt-2">
+              <h3 className="text-2xl sm:text-3xl md:text-5xl font-normal font-serif-luxury text-[#29241F] mt-2">
                 {dossier.itineraryTitle}
               </h3>
               <p className="text-xs md:text-sm text-[#777066] mt-2 font-light leading-relaxed max-w-2xl">
@@ -253,7 +256,7 @@ export const StayCurator: React.FC = () => {
 
             <button
               onClick={() => setDossier(null)}
-              className="btn-outline-espresso text-xs flex items-center gap-1.5 self-start"
+              className="btn-outline-espresso text-xs flex items-center justify-center gap-1.5 self-start py-2.5 px-4"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Modify Preferences</span>
@@ -261,30 +264,30 @@ export const StayCurator: React.FC = () => {
           </div>
 
           {/* Matched Suite Spotlight */}
-          <div className="p-6 rounded border border-[#E7DED0] bg-[#F7F4EE]/40 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+          <div className="p-4 sm:p-6 rounded-xl border border-[#E7DED0] bg-[#F7F4EE]/40 grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
             <img
               src={matchedRoom.images[0]}
               alt={matchedRoom.name}
-              className="md:col-span-4 h-48 w-full object-cover rounded border border-[#E7DED0]"
+              className="md:col-span-4 h-48 w-full object-cover rounded-lg border border-[#E7DED0]"
             />
             <div className="md:col-span-5 space-y-2">
-              <span className="text-[10px] uppercase font-mono tracking-wider text-[#A77D4B]">Recommended Residence</span>
-              <h4 className="text-2xl font-normal font-serif-luxury text-[#29241F]">
+              <span className="text-[10px] uppercase font-mono tracking-wider text-[#A77D4B] font-semibold">Recommended Residence</span>
+              <h4 className="text-xl sm:text-2xl font-normal font-serif-luxury text-[#29241F]">
                 {matchedRoom.name}
               </h4>
               <p className="text-xs text-[#777066] font-light leading-relaxed">
                 {matchedRoom.tagline} • {matchedRoom.sizeSqFt} sq ft • {matchedRoom.floor}
               </p>
             </div>
-            <div className="md:col-span-3 text-right space-y-3">
+            <div className="md:col-span-3 text-left md:text-right space-y-3 pt-2 md:pt-0 border-t md:border-t-0 border-[#E7DED0]">
               <div>
                 <span className="text-[10px] uppercase font-mono text-[#777066] block">Direct Rate</span>
-                <span className="text-3xl font-normal font-serif-luxury text-[#29241F]">{formatINR(matchedRoom.pricePerNight)}</span>
+                <span className="text-2xl sm:text-3xl font-normal font-serif-luxury text-[#29241F]">{formatINR(matchedRoom.pricePerNight)}</span>
                 <span className="text-xs text-[#777066]"> / night</span>
               </div>
               <button
                 onClick={() => setSelectedRoomFor3D(matchedRoom)}
-                className="w-full btn-outline-bronze text-center"
+                className="w-full btn-outline-bronze text-center py-2.5"
               >
                 Inspect in 3D Tour
               </button>
@@ -296,23 +299,23 @@ export const StayCurator: React.FC = () => {
             <span className="text-[10px] uppercase font-mono tracking-widest text-[#777066] block">
               Suggested Resident Itinerary
             </span>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               {dossier.days.map((day, idx) => (
-                <div key={idx} className="p-6 rounded border border-[#E7DED0] bg-white space-y-4">
-                  <h5 className="text-base font-normal font-serif-luxury text-[#29241F] pb-2 border-b border-[#E7DED0]">
+                <div key={idx} className="p-4 sm:p-6 rounded-lg border border-[#E7DED0] bg-white space-y-4">
+                  <h5 className="text-sm sm:text-base font-normal font-serif-luxury text-[#29241F] pb-2 border-b border-[#E7DED0]">
                     {day.dayLabel}
                   </h5>
                   <div className="space-y-3 text-xs">
                     <div>
-                      <span className="text-[10px] font-mono text-[#A77D4B] uppercase block">Morning</span>
+                      <span className="text-[10px] font-mono text-[#A77D4B] uppercase block font-semibold">Morning</span>
                       <p className="text-[#777066] font-light mt-0.5 leading-relaxed">{day.morning}</p>
                     </div>
                     <div>
-                      <span className="text-[10px] font-mono text-[#A77D4B] uppercase block">Afternoon</span>
+                      <span className="text-[10px] font-mono text-[#A77D4B] uppercase block font-semibold">Afternoon</span>
                       <p className="text-[#777066] font-light mt-0.5 leading-relaxed">{day.afternoon}</p>
                     </div>
                     <div>
-                      <span className="text-[10px] font-mono text-[#A77D4B] uppercase block">Evening</span>
+                      <span className="text-[10px] font-mono text-[#A77D4B] uppercase block font-semibold">Evening</span>
                       <p className="text-[#777066] font-light mt-0.5 leading-relaxed">{day.evening}</p>
                     </div>
                   </div>
@@ -322,7 +325,7 @@ export const StayCurator: React.FC = () => {
           </div>
 
           {/* Chef & Sommelier Pairing Preview */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 rounded border border-[#E7DED0] bg-[#F7F4EE]/50 text-xs">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 p-4 sm:p-6 rounded-lg border border-[#E7DED0] bg-[#F7F4EE]/50 text-xs">
             <div>
               <span className="text-[10px] uppercase font-mono text-[#A77D4B] font-semibold block mb-1">
                 Bespoke In-Suite Culinary Journey
@@ -342,10 +345,10 @@ export const StayCurator: React.FC = () => {
           </div>
 
           {/* Actions */}
-          <div className="pt-6 border-t border-[#E7DED0] flex flex-wrap items-center justify-between gap-4">
+          <div className="pt-6 border-t border-[#E7DED0] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
             <button
               onClick={() => window.print()}
-              className="btn-outline-espresso flex items-center gap-1.5"
+              className="btn-outline-espresso flex items-center justify-center gap-1.5 py-3"
             >
               <Printer className="w-3.5 h-3.5" />
               <span>Print Dossier</span>
@@ -353,7 +356,7 @@ export const StayCurator: React.FC = () => {
 
             <button
               onClick={() => setSelectedRoomForBooking(matchedRoom)}
-              className="btn-primary-espresso flex items-center gap-2"
+              className="btn-primary-espresso flex items-center justify-center gap-2 py-3.5"
             >
               <span>Reserve This Curated Stay</span>
               <ArrowRight className="w-3.5 h-3.5" />
