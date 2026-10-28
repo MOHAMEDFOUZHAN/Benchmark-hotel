@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useHotel } from '../context/HotelContext';
 import { Booking } from '../types/hotel';
+import { formatINR } from '../utils/formatters';
 import { DigitalKeycardPass } from './DigitalKeycardPass';
 import {
   X,
@@ -37,155 +38,131 @@ export const ReservationLookupModal: React.FC<ReservationLookupModalProps> = ({ 
   };
 
   const handleCancelStay = (bookingId: string) => {
-    if (window.confirm('Are you sure you wish to cancel this luxury reservation? Free cancellation applies per hotel policy.')) {
+    if (window.confirm('Are you sure you wish to cancel this reservation?')) {
       updateBookingStatus(bookingId, 'Cancelled');
-      setMessage('Your reservation has been cancelled. Confirmation sent to your registered email.');
+      setMessage('Your reservation has been cancelled.');
       const updated = lookupBooking(query);
       if (updated) setResult(updated);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 bg-black/85 backdrop-blur-md overflow-y-auto animate-fadeIn">
-      <div className="relative w-full max-w-2xl bg-[#102A26] border border-[#C6A76B]/40 rounded-3xl overflow-hidden shadow-2xl my-auto text-[#F6F1E7]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-[#29241F]/80 backdrop-blur-sm overflow-y-auto animate-fadeIn text-[#29241F]">
+      <div className="relative w-full max-w-2xl bg-white border border-[#E7DED0] rounded-lg overflow-hidden shadow-2xl my-auto">
         {/* Header */}
-        <div className="p-5 md:p-6 bg-gradient-to-r from-[#193B32] to-[#102A26] border-b border-[#C6A76B]/25 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#102A26] border border-[#C6A76B]/50 flex items-center justify-center text-[#C6A76B]">
-              <Key className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#C6A76B] font-mono">
-                Guest Services & Digital Key
-              </span>
-              <h2 className="text-xl font-bold font-serif-luxury text-white">
-                Find My Reservation
-              </h2>
-            </div>
+        <div className="p-6 md:p-8 bg-[#F7F4EE] border-b border-[#E7DED0] flex items-center justify-between">
+          <div>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#A77D4B] block">
+              Guest Services
+            </span>
+            <h2 className="text-2xl md:text-3xl font-normal font-serif-luxury text-[#29241F] mt-1">
+              Find My Reservation
+            </h2>
           </div>
 
           <button
             onClick={onClose}
             aria-label="Close modal"
-            className="p-2 rounded-full bg-[#193B32] hover:bg-[#1f473c] text-[#F6F1E7] border border-[#C6A76B]/30 transition-all"
+            className="p-2 rounded bg-white hover:bg-[#E7DED0]/50 text-[#29241F] border border-[#E7DED0] transition-all"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-5 md:p-8 space-y-6">
-          {/* Search Bar Form */}
+        <div className="p-6 md:p-8 space-y-6">
           <form onSubmit={handleSearch} className="flex gap-2">
             <div className="relative flex-1">
-              <Search className="w-4 h-4 text-[#C6A76B] absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-[#777066] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Enter Booking Code (e.g. BMH-89410) or Email Address..."
+                placeholder="Enter Booking Code (e.g. BMH-89410) or Email..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#193B32] border border-[#C6A76B]/40 text-[#F6F1E7] text-sm focus:outline-none focus:border-[#C6A76B] font-medium"
+                className="w-full pl-10 pr-4 py-3 rounded border border-[#E7DED0] bg-[#F7F4EE]/30 text-[#29241F] text-xs focus:outline-none focus:border-[#29241F]"
               />
             </div>
             <button
               type="submit"
-              className="py-3 px-6 rounded-xl gold-gradient-btn font-bold text-xs uppercase tracking-wider shrink-0"
+              className="btn-primary-espresso shrink-0"
             >
               Retrieve Stay
             </button>
           </form>
 
-          {/* Quick Demo hint */}
-          <div className="text-[11px] text-[#F6F1E7]/70 flex items-center gap-2">
-            <span className="text-[#C6A76B] font-semibold font-mono">Demo Hint:</span>
-            <span>Try code <code className="text-[#C6A76B] font-mono bg-[#193B32] px-1.5 py-0.5 rounded border border-[#C6A76B]/30">BMH-89410</code> or <code className="text-[#C6A76B] font-mono bg-[#193B32] px-1.5 py-0.5 rounded border border-[#C6A76B]/30">BMH-64291</code></span>
+          <div className="text-[11px] text-[#777066] flex items-center gap-2">
+            <span className="text-[#A77D4B] font-mono font-medium">Demo Codes:</span>
+            <span><code className="text-[#29241F] font-mono bg-[#E7DED0]/60 px-1.5 py-0.5 rounded">BMH-89410</code> or <code className="text-[#29241F] font-mono bg-[#E7DED0]/60 px-1.5 py-0.5 rounded">BMH-64291</code></span>
           </div>
 
           {message && (
-            <div className="p-3 rounded-xl bg-[#193B32] border border-[#C6A76B]/50 text-xs text-[#C6A76B]">
+            <div className="p-3 rounded border border-[#E7DED0] bg-[#F7F4EE] text-xs text-[#A77D4B]">
               {message}
             </div>
           )}
 
           {/* RESULT FOUND */}
           {hasSearched && result && (
-            <div className="space-y-6 border-t border-[#C6A76B]/25 pt-6 animate-fadeIn">
-              {/* Summary Card */}
-              <div className="p-5 rounded-2xl bg-[#193B32] border border-[#C6A76B]/30 space-y-4">
+            <div className="space-y-6 border-t border-[#E7DED0] pt-6 animate-fadeIn">
+              <div className="p-5 rounded border border-[#E7DED0] bg-[#F7F4EE]/40 space-y-4">
                 <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
                   <div>
-                    <span className="text-[10px] uppercase font-mono text-[#C6A76B] block tracking-widest font-bold">
-                      Reservation ID: {result.bookingCode}
+                    <span className="text-[10px] uppercase font-mono text-[#A77D4B] block tracking-wider">
+                      Reference: {result.bookingCode}
                     </span>
-                    <h3 className="text-xl font-bold font-serif-luxury text-white">
+                    <h3 className="text-xl font-normal font-serif-luxury text-[#29241F]">
                       {result.roomName}
                     </h3>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold font-mono ${
-                      result.bookingStatus === 'Confirmed'
-                        ? 'bg-[#102A26] text-[#C6A76B] border border-[#C6A76B]/50'
-                        : result.bookingStatus === 'Checked-In'
-                        ? 'bg-[#102A26] text-sky-300 border border-sky-600'
-                        : 'bg-[#102A26] text-rose-300 border border-rose-600'
-                    }`}>
+                    <span className="px-2.5 py-0.5 rounded text-[11px] font-mono bg-white border border-[#E7DED0] text-[#29241F]">
                       {result.bookingStatus}
                     </span>
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold font-mono ${
-                      result.paymentStatus === 'Paid'
-                        ? 'bg-[#102A26] text-emerald-400 border border-emerald-600'
-                        : 'bg-[#102A26] text-[#C6A76B] border border-[#C6A76B]/50'
-                    }`}>
+                    <span className="px-2.5 py-0.5 rounded text-[11px] font-mono bg-white border border-[#E7DED0] text-[#A77D4B]">
                       {result.paymentStatus}
                     </span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs pt-3 border-t border-[#C6A76B]/20">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs pt-3 border-t border-[#E7DED0]">
                   <div>
-                    <span className="text-[10px] text-[#C6A76B] uppercase block font-mono">Guest Name</span>
-                    <span className="font-semibold text-white">{result.guestName}</span>
+                    <span className="text-[10px] text-[#777066] uppercase block font-mono">Guest</span>
+                    <span className="text-[#29241F] font-medium">{result.guestName}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-[#C6A76B] uppercase block font-mono">Check-In / Out</span>
-                    <span className="font-semibold text-white">{result.checkInDate} → {result.checkOutDate}</span>
+                    <span className="text-[10px] text-[#777066] uppercase block font-mono">Dates</span>
+                    <span className="text-[#29241F]">{result.checkInDate} → {result.checkOutDate}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-[#C6A76B] uppercase block font-mono">Assigned Suite</span>
-                    <span className="font-semibold text-[#C6A76B] font-mono">{result.roomNumberAssigned || 'TBD at arrival'}</span>
+                    <span className="text-[10px] text-[#777066] uppercase block font-mono">Suite</span>
+                    <span className="text-[#A77D4B] font-mono">{result.roomNumberAssigned || 'TBD'}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-[#C6A76B] uppercase block font-mono">Total Rate</span>
-                    <span className="font-bold text-[#C6A76B] font-mono text-sm">${result.totalPrice.toLocaleString()}</span>
+                    <span className="text-[10px] text-[#777066] uppercase block font-mono">Total Rate</span>
+                    <span className="font-mono text-[#29241F] font-medium">{formatINR(result.totalPrice)}</span>
                   </div>
                 </div>
               </div>
 
-              {/* 3D Digital Pass Render */}
+              {/* Keycard Pass */}
               <div className="pt-2">
-                <h4 className="text-xs uppercase tracking-wider text-[#C6A76B] font-semibold mb-2 text-center font-mono">
-                  Your Active Digital Mobile Keycard
-                </h4>
                 <DigitalKeycardPass booking={result} />
               </div>
 
-              {/* Action buttons */}
-              <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#C6A76B]/25">
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#E7DED0]">
                 <button
                   onClick={() => window.print()}
-                  className="py-2.5 px-4 rounded-xl bg-[#193B32] hover:bg-[#1f473c] text-white text-xs font-semibold flex items-center gap-1.5 border border-[#C6A76B]/30"
+                  className="btn-outline-espresso"
                 >
-                  <Printer className="w-3.5 h-3.5 text-[#C6A76B]" />
-                  Print Folio Statement
+                  Print Folio
                 </button>
 
                 {result.bookingStatus !== 'Cancelled' && (
                   <button
                     onClick={() => handleCancelStay(result.id)}
-                    className="py-2.5 px-4 rounded-xl bg-rose-950/60 hover:bg-rose-900/60 text-rose-300 border border-rose-600/50 text-xs font-semibold flex items-center gap-1.5"
+                    className="text-xs text-rose-700 hover:underline py-2 px-3"
                   >
-                    <XCircle className="w-3.5 h-3.5" />
                     Cancel Reservation
                   </button>
                 )}
@@ -195,20 +172,12 @@ export const ReservationLookupModal: React.FC<ReservationLookupModalProps> = ({ 
 
           {/* NOT FOUND */}
           {hasSearched && !result && (
-            <div className="p-8 rounded-2xl bg-[#193B32] border border-[#C6A76B]/30 text-center space-y-3">
-              <AlertCircle className="w-10 h-10 text-[#C6A76B] mx-auto" />
-              <h4 className="text-base font-bold text-white">No Reservation Found</h4>
-              <p className="text-xs text-[#F6F1E7]/70 max-w-sm mx-auto leading-relaxed">
-                We couldn't locate any stay under "{query}". Please verify the booking reference number in your confirmation email or speak with our concierge.
+            <div className="p-8 rounded border border-[#E7DED0] bg-[#F7F4EE]/30 text-center space-y-2">
+              <AlertCircle className="w-8 h-8 text-[#A77D4B] mx-auto" />
+              <h4 className="text-base font-normal font-serif-luxury text-[#29241F]">No record located</h4>
+              <p className="text-xs text-[#777066] max-w-sm mx-auto font-light">
+                We could not locate an active stay matching "{query}". Please check your booking reference or contact concierge desk.
               </p>
-              <div className="pt-2">
-                <a
-                  href="tel:+18005558888"
-                  className="inline-flex items-center gap-1.5 text-xs text-[#C6A76B] hover:underline font-semibold"
-                >
-                  <PhoneCall className="w-3.5 h-3.5" /> Call Concierge Desk: +1 (800) 555-BENCHMARK
-                </a>
-              </div>
             </div>
           )}
         </div>

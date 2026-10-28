@@ -8,7 +8,6 @@ import {
   Clock,
   Send,
   CheckCircle2,
-  Sparkles,
   Compass
 } from 'lucide-react';
 
@@ -17,7 +16,7 @@ export const LocationAndContact: React.FC = () => {
     name: '',
     email: '',
     phone: '',
-    inquiryType: 'Concierge & Suite Inquiries',
+    inquiryType: 'Suite Inquiries',
     message: ''
   });
   const [submitted, setSubmitted] = useState(false);
@@ -31,7 +30,7 @@ export const LocationAndContact: React.FC = () => {
         name: '',
         email: '',
         phone: '',
-        inquiryType: 'Concierge & Suite Inquiries',
+        inquiryType: 'Suite Inquiries',
         message: ''
       });
     }, 4000);
@@ -40,61 +39,60 @@ export const LocationAndContact: React.FC = () => {
   const transitOptions = [
     {
       icon: Plane,
-      mode: 'International Airport (SFO/LAX Hub)',
-      time: '25 Mins via Chauffeur / 7 Mins via Helicopter',
-      detail: 'Complimentary tarmac greet & Rolls-Royce Ghost private transfer for Penthouse & Suite guests.'
-    },
-    {
-      icon: Anchor,
-      mode: 'Benchmark Superyacht Marina',
-      time: 'Direct Marina Berthing at Promenade Dock A',
-      detail: 'Deep-water slips accommodating vessels up to 220 feet with shore power and concierge provisioning.'
+      mode: 'Coimbatore Airport (CJB)',
+      time: '2.5 Hours Mountain Chauffeur',
+      detail: 'Scenic chauffeured climb through the Coonoor tea ghats in our private Rolls-Royce Ghost or 20-min VIP helicopter flight.'
     },
     {
       icon: Compass,
-      mode: 'Rooftop Helipad (Deck 50)',
-      time: 'Direct Touchdown (ICAO Code: WBBM)',
-      detail: 'Private VIP security clearance and direct express elevator to the Royal Penthouse corridor.'
+      mode: 'Charing Cross & Heritage Rail',
+      time: '3 Minutes (0.4 km)',
+      detail: 'Moments from Ooty landmark Charing Cross, the UNESCO heritage Nilgiri steam railway, and lush Government Botanical Garden.'
+    },
+    {
+      icon: Anchor,
+      mode: 'Highland Helipad (Deck 50)',
+      time: '7,850 ft MSL Direct Touchdown',
+      detail: 'Private rooftop aviation clearance with encrypted elevator descent directly into the presidential sky wing.'
     }
   ];
 
   return (
-    <section id="location" className="py-20 px-4 md:px-8 bg-[#F7F4ED] text-[#252A27]">
-      <div className="max-w-7xl mx-auto space-y-14">
+    <section id="location" className="py-24 px-6 md:px-12 bg-[#E7DED0]/40 text-[#29241F] border-t border-[#E7DED0]">
+      <div className="max-w-7xl mx-auto space-y-16">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#102A26]/10 text-[#102A26] border border-[#C6A76B]/40 text-xs font-bold tracking-widest uppercase">
-            <Sparkles className="w-3.5 h-3.5 text-[#C6A76B]" />
-            Prime Coastal Sanctuary
-          </div>
-          <h2 className="text-3xl md:text-5xl font-extrabold font-serif-luxury text-[#102A26]">
-            Location & Concierge Salon
+        <div className="max-w-2xl">
+          <span className="text-[10px] uppercase tracking-[0.28em] text-[#A77D4B] font-semibold block mb-2 font-sans">
+            Highland Setting • Nilgiris
+          </span>
+          <h2 className="text-4xl md:text-6xl font-normal font-serif-luxury text-[#29241F]">
+            Location & Inquiries
           </h2>
-          <p className="text-xs md:text-sm text-[#252A27]/80 leading-relaxed">
-            Situated on an exclusive seaside promontory, Benchmark combines absolute secluded sanctuary living with effortless high-speed access.
+          <p className="text-xs md:text-sm text-[#777066] mt-3 font-light leading-relaxed">
+            Positioned along the pristine ridges above Charing Cross, Benchmark balances secluded tea estate stillness with effortless access to Ooty's timeless heritage.
           </p>
         </div>
 
-        {/* Transit Cards */}
+        {/* Transit Options */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {transitOptions.map((item, idx) => {
             const Icon = item.icon;
             return (
               <div
                 key={idx}
-                className="p-6 rounded-3xl bg-white border border-[#C6A76B]/30 shadow-md hover:shadow-xl transition-all space-y-3"
+                className="p-7 rounded-lg bg-white border border-[#E7DED0] space-y-3 shadow-sm"
               >
-                <div className="w-12 h-12 rounded-2xl bg-[#102A26] text-[#C6A76B] flex items-center justify-center shadow-md">
-                  <Icon className="w-6 h-6" />
+                <div className="w-10 h-10 rounded bg-[#F7F4EE] border border-[#E7DED0] text-[#A77D4B] flex items-center justify-center">
+                  <Icon className="w-5 h-5" />
                 </div>
-                <h3 className="text-base font-bold font-serif-luxury text-[#102A26]">
+                <h3 className="text-lg font-normal font-serif-luxury text-[#29241F]">
                   {item.mode}
                 </h3>
-                <div className="text-xs font-semibold text-[#C6A76B] font-mono flex items-center gap-1.5">
+                <div className="text-xs font-mono text-[#A77D4B] flex items-center gap-1.5">
                   <Clock className="w-3.5 h-3.5" />
                   {item.time}
                 </div>
-                <p className="text-xs text-[#252A27]/75 leading-relaxed">
+                <p className="text-xs text-[#777066] font-light leading-relaxed">
                   {item.detail}
                 </p>
               </div>
@@ -102,77 +100,71 @@ export const LocationAndContact: React.FC = () => {
           })}
         </div>
 
-        {/* Contact Form & Map Interactive Panel */}
-        <div className="rounded-3xl bg-[#102A26] text-[#F6F1E7] border border-[#C6A76B]/40 shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-12">
-          {/* Left Column: Direct Concierge Hotline Info */}
-          <div className="lg:col-span-5 p-8 md:p-10 bg-gradient-to-br from-[#102A26] to-[#193B32] space-y-6 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#C6A76B]/25">
+        {/* Contact Form Panel */}
+        <div className="rounded-lg bg-white border border-[#E7DED0] shadow-sm overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+          {/* Left Column */}
+          <div className="lg:col-span-5 p-8 md:p-12 bg-[#F7F4EE] space-y-6 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#E7DED0]">
             <div className="space-y-4">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#C6A76B] block">
-                24/7 Global Liaison Desk
+              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#A77D4B] block">
+                Direct Host Desk
               </span>
-              <h3 className="text-2xl md:text-3xl font-bold font-serif-luxury text-[#F6F1E7]">
-                Connect with Private Concierge
+              <h3 className="text-3xl font-normal font-serif-luxury text-[#29241F]">
+                Speak with our team.
               </h3>
-              <p className="text-xs text-[#F6F1E7]/80 leading-relaxed">
-                Whether arranging a discreet arrival, bespoke chef tasting, or private yacht charter, our head concierge is at your service.
+              <p className="text-xs text-[#777066] font-light leading-relaxed">
+                Whether arranging a vintage Nilgiri train coach, single-estate tea cellar tasting, or fireside dinner, our resident team is available throughout the year.
               </p>
 
-              <div className="space-y-3.5 pt-4 text-xs">
+              <div className="space-y-4 pt-4 text-xs">
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-[#193B32] border border-[#C6A76B]/30 flex items-center justify-center text-[#C6A76B] shrink-0">
-                    <MapPin className="w-4 h-4" />
-                  </div>
+                  <MapPin className="w-4 h-4 text-[#A77D4B] mt-0.5 shrink-0" />
                   <div>
-                    <span className="text-[10px] text-[#C6A76B] block uppercase font-mono">Location</span>
-                    <span className="text-white font-medium">One Benchmark Promenade, Marina Coastline Blvd</span>
+                    <span className="text-[10px] text-[#777066] block uppercase font-mono">Address</span>
+                    <span className="text-[#29241F] font-medium">Benchmark Ridge, Near Charing Cross, Ooty (Nilgiris) 643001, Tamil Nadu</span>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-[#193B32] border border-[#C6A76B]/30 flex items-center justify-center text-[#C6A76B] shrink-0">
-                    <PhoneCall className="w-4 h-4" />
-                  </div>
+                  <PhoneCall className="w-4 h-4 text-[#A77D4B] mt-0.5 shrink-0" />
                   <div>
-                    <span className="text-[10px] text-[#C6A76B] block uppercase font-mono">Direct Line</span>
-                    <span className="text-white font-medium">+1 (800) 555-BENCHMARK • Ext. 1</span>
+                    <span className="text-[10px] text-[#777066] block uppercase font-mono">Telephone</span>
+                    <span className="text-[#29241F] font-medium">+91 423 244 8800 / +91 98402 11990</span>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-[#193B32] border border-[#C6A76B]/30 flex items-center justify-center text-[#C6A76B] shrink-0">
-                    <Mail className="w-4 h-4" />
-                  </div>
+                  <Mail className="w-4 h-4 text-[#A77D4B] mt-0.5 shrink-0" />
                   <div>
-                    <span className="text-[10px] text-[#C6A76B] block uppercase font-mono">Private Inquiries</span>
-                    <span className="text-white font-medium">concierge@benchmarkhotel.com</span>
+                    <span className="text-[10px] text-[#777066] block uppercase font-mono">Inquiries</span>
+                    <span className="text-[#29241F] font-medium">reservations@benchmarkooty.com</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="pt-6 border-t border-[#C6A76B]/20 text-[11px] text-[#F6F1E7]/70">
-              * Dedicated encrypted communications available for heads of state & sovereign delegations.
+            <div className="pt-6 border-t border-[#E7DED0] text-[11px] text-[#777066] font-light">
+              Front desk operates 24 hours daily.
             </div>
           </div>
 
-          {/* Right Column: Direct Request Form */}
-          <div className="lg:col-span-7 p-8 md:p-10 bg-[#14332c] flex flex-col justify-center">
+          {/* Right Column: Inquiries Form */}
+          <div className="lg:col-span-7 p-8 md:p-12 bg-white flex flex-col justify-center">
             {submitted ? (
-              <div className="p-8 rounded-2xl bg-[#193B32] border border-[#C6A76B]/50 text-center space-y-3 animate-fadeIn">
-                <CheckCircle2 className="w-12 h-12 text-[#C6A76B] mx-auto animate-bounce" />
-                <h4 className="text-xl font-bold font-serif-luxury text-white">
-                  Message Delivered to Royal Concierge
+              <div className="p-8 text-center space-y-3">
+                <CheckCircle2 className="w-10 h-10 text-[#A77D4B] mx-auto" />
+                <h4 className="text-2xl font-normal font-serif-luxury text-[#29241F]">
+                  Inquiry Received
                 </h4>
-                <p className="text-xs text-[#F6F1E7]/80 max-w-sm mx-auto">
-                  A personal concierge officer will review your request and connect with you within 15 minutes.
+                <p className="text-xs text-[#777066] font-light max-w-sm mx-auto">
+                  Our reservations host will reply directly to your email within one business hour.
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#C6A76B] mb-1.5">
-                      Your Full Name
+                    <label className="block text-[10px] uppercase tracking-[0.2em] font-medium text-[#777066] mb-1.5">
+                      Name
                     </label>
                     <input
                       type="text"
@@ -180,13 +172,13 @@ export const LocationAndContact: React.FC = () => {
                       placeholder="e.g. Lady Vivienne Montgomery"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#102A26] border border-[#C6A76B]/40 text-[#F6F1E7] text-xs focus:outline-none focus:border-[#C6A76B]"
+                      className="w-full px-4 py-2.5 rounded border border-[#E7DED0] bg-[#F7F4EE]/30 text-[#29241F] text-xs focus:outline-none focus:border-[#29241F]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#C6A76B] mb-1.5">
-                      VIP Email Address
+                    <label className="block text-[10px] uppercase tracking-[0.2em] font-medium text-[#777066] mb-1.5">
+                      Email
                     </label>
                     <input
                       type="email"
@@ -194,63 +186,63 @@ export const LocationAndContact: React.FC = () => {
                       placeholder="e.g. v.montgomery@sovereign.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#102A26] border border-[#C6A76B]/40 text-[#F6F1E7] text-xs focus:outline-none focus:border-[#C6A76B]"
+                      className="w-full px-4 py-2.5 rounded border border-[#E7DED0] bg-[#F7F4EE]/30 text-[#29241F] text-xs focus:outline-none focus:border-[#29241F]"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#C6A76B] mb-1.5">
-                      Contact Phone
+                    <label className="block text-[10px] uppercase tracking-[0.2em] font-medium text-[#777066] mb-1.5">
+                      Phone
                     </label>
                     <input
                       type="tel"
                       placeholder="e.g. +1 (555) 789-0123"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#102A26] border border-[#C6A76B]/40 text-[#F6F1E7] text-xs focus:outline-none focus:border-[#C6A76B]"
+                      className="w-full px-4 py-2.5 rounded border border-[#E7DED0] bg-[#F7F4EE]/30 text-[#29241F] text-xs focus:outline-none focus:border-[#29241F]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#C6A76B] mb-1.5">
-                      Inquiry Category
+                    <label className="block text-[10px] uppercase tracking-[0.2em] font-medium text-[#777066] mb-1.5">
+                      Category
                     </label>
                     <select
                       value={formData.inquiryType}
                       onChange={(e) => setFormData({ ...formData, inquiryType: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#102A26] border border-[#C6A76B]/40 text-[#F6F1E7] text-xs focus:outline-none focus:border-[#C6A76B] cursor-pointer"
+                      className="w-full px-4 py-2.5 rounded border border-[#E7DED0] bg-[#F7F4EE]/30 text-[#29241F] text-xs focus:outline-none focus:border-[#29241F] cursor-pointer"
                     >
-                      <option value="Concierge & Suite Inquiries">Concierge & Suite Inquiries</option>
-                      <option value="Private Helicopter / Yacht Charter">Private Helicopter / Yacht Charter</option>
-                      <option value="Michelin Private Dining Booking">Michelin Private Dining Booking</option>
-                      <option value="Corporate / Sovereign Delegation">Corporate / Sovereign Delegation</option>
+                      <option value="Suite Inquiries">Suite Inquiries</option>
+                      <option value="Private Boat Charter">Private Boat Charter</option>
+                      <option value="Dining Reservations">Dining Reservations</option>
+                      <option value="Special Celebrations">Special Celebrations</option>
                     </select>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#C6A76B] mb-1.5">
-                    Concierge Message & Specifications
+                  <label className="block text-[10px] uppercase tracking-[0.2em] font-medium text-[#777066] mb-1.5">
+                    Message
                   </label>
                   <textarea
                     rows={3}
                     required
-                    placeholder="Provide details about dates, group size, special champagne or dietary preferences..."
+                    placeholder="Dates, suite preferences, or specific requests..."
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#102A26] border border-[#C6A76B]/40 text-[#F6F1E7] text-xs focus:outline-none focus:border-[#C6A76B] resize-none"
+                    className="w-full px-4 py-2.5 rounded border border-[#E7DED0] bg-[#F7F4EE]/30 text-[#29241F] text-xs focus:outline-none focus:border-[#29241F] resize-none"
                   />
                 </div>
 
-                <div className="flex justify-end pt-1">
+                <div className="flex justify-end pt-2">
                   <button
                     type="submit"
-                    className="py-3 px-8 rounded-xl gold-gradient-btn font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-xl"
+                    className="btn-primary-espresso flex items-center gap-2"
                   >
                     <Send className="w-3.5 h-3.5" />
-                    <span>Transmit to Concierge</span>
+                    <span>Send Inquiry</span>
                   </button>
                 </div>
               </form>
@@ -261,4 +253,3 @@ export const LocationAndContact: React.FC = () => {
     </section>
   );
 };
-

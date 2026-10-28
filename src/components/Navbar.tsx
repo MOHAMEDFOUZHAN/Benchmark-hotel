@@ -54,13 +54,19 @@ export const Navbar: React.FC = () => {
               BENCHMARK
             </span>
             <span className="text-[9px] tracking-[0.35em] uppercase text-[#777066] font-sans mt-1">
-              HOTEL & RESIDENCES
+              CHARING CROSS • OOTY
             </span>
           </div>
         </div>
 
         {/* Desktop Editorial Navigation */}
-        <nav className="hidden lg:flex items-center gap-8 text-[11px] uppercase tracking-[0.18em] font-medium text-[#29241F]">
+        <nav className="hidden lg:flex items-center gap-7 text-[11px] uppercase tracking-[0.18em] font-medium text-[#29241F]">
+          <button
+            onClick={() => scrollToSection('tower-explorer')}
+            className="hover:text-[#A77D4B] transition-colors py-1 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-[1px] after:bg-[#A77D4B] after:transition-all"
+          >
+            Tower Elevation
+          </button>
           <button
             onClick={() => scrollToSection('suites')}
             className="hover:text-[#A77D4B] transition-colors py-1 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-[1px] after:bg-[#A77D4B] after:transition-all"
@@ -68,10 +74,10 @@ export const Navbar: React.FC = () => {
             Suites & Villas
           </button>
           <button
-            onClick={() => scrollToSection('3d-tour')}
-            className="hover:text-[#A77D4B] transition-colors py-1 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-[1px] after:bg-[#A77D4B] after:transition-all"
+            onClick={() => scrollToSection('curator')}
+            className="hover:text-[#A77D4B] transition-colors py-1 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-[1px] after:bg-[#A77D4B] after:transition-all text-[#A77D4B] font-semibold"
           >
-            3D Suite Tour
+            Stay Curator
           </button>
           <button
             onClick={() => scrollToSection('dining-wellness')}
@@ -84,12 +90,6 @@ export const Navbar: React.FC = () => {
             className="hover:text-[#A77D4B] transition-colors py-1 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-[1px] after:bg-[#A77D4B] after:transition-all"
           >
             Location
-          </button>
-          <button
-            onClick={() => scrollToSection('privileges')}
-            className="hover:text-[#A77D4B] transition-colors py-1 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-[1px] after:bg-[#A77D4B] after:transition-all"
-          >
-            Privileges
           </button>
         </nav>
 

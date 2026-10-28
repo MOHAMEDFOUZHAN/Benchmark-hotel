@@ -3,6 +3,7 @@ import confetti from 'canvas-confetti';
 import { Room, BookingAddOn, PaymentMethod } from '../types/hotel';
 import { LUXURY_ADD_ONS } from '../data/mockData';
 import { useHotel } from '../context/HotelContext';
+import { formatINR } from '../utils/formatters';
 import { DigitalKeycardPass } from './DigitalKeycardPass';
 import {
   X,
@@ -12,7 +13,6 @@ import {
   QrCode,
   Building,
   CheckCircle2,
-  Sparkles,
   ArrowRight,
   ArrowLeft,
   Lock,
@@ -27,7 +27,6 @@ interface BookingModalProps {
 export const BookingModal: React.FC<BookingModalProps> = ({ room, onClose }) => {
   const { searchFilter, createBooking, latestConfirmedBooking, setCurrentView } = useHotel();
 
-  // Wizard Steps: 1: Dates & Add-ons | 2: Guest Details | 3: Payment | 4: Confirmation & Keycard
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 
   // Form State
@@ -37,7 +36,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ room, onClose }) => 
   const [children, setChildren] = useState(searchFilter.children || 0);
 
   const [selectedAddOns, setSelectedAddOns] = useState<BookingAddOn[]>([
-    LUXURY_ADD_ONS[1] // Default include champagne welcome
+    LUXURY_ADD_ONS[1]
   ]);
 
   const [guestName, setGuestName] = useState('');
@@ -54,7 +53,6 @@ export const BookingModal: React.FC<BookingModalProps> = ({ room, onClose }) => 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [confirmedBookingData, setConfirmedBookingData] = useState<any>(null);
 
-  // Calculate nights
   const calculateNights = () => {
     const start = new Date(checkIn);
     const end = new Date(checkOut);
@@ -114,146 +112,135 @@ export const BookingModal: React.FC<BookingModalProps> = ({ room, onClose }) => 
       setIsSubmitting(false);
       setStep(4);
 
-      // Launch Confetti Celebration
       try {
         confetti({
-          particleCount: 120,
-          spread: 80,
+          particleCount: 80,
+          spread: 70,
           origin: { y: 0.6 },
-          colors: ['#C6A76B', '#DFCA9B', '#193B32', '#102A26', '#F6F1E7']
+          colors: ['#A77D4B', '#29241F', '#E7DED0', '#F7F4EE']
         });
       } catch {
         // ignore
       }
-    }, 1200);
+    }, 1000);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 bg-black/85 backdrop-blur-md overflow-y-auto animate-fadeIn">
-      <div className="relative w-full max-w-4xl bg-[#102A26] border border-[#C6A76B]/40 rounded-3xl overflow-hidden shadow-2xl my-auto text-[#F6F1E7]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-[#29241F]/80 backdrop-blur-sm overflow-y-auto animate-fadeIn text-[#29241F]">
+      <div className="relative w-full max-w-4xl bg-white border border-[#E7DED0] rounded-lg overflow-hidden shadow-2xl my-auto">
         {/* Modal Header */}
-        <div className="p-5 md:p-6 bg-gradient-to-r from-[#193B32] to-[#102A26] border-b border-[#C6A76B]/25 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#102A26] border border-[#C6A76B]/50 flex items-center justify-center text-[#C6A76B]">
-              <Sparkles className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-bold uppercase tracking-widest text-[#C6A76B] font-mono">
-                  Benchmark Signature Reservation
-                </span>
-                <span className="text-[10px] bg-[#102A26] text-[#F6F1E7] px-2 py-0.5 rounded-full border border-[#C6A76B]/30 font-mono">
-                  Step {step} of 4
-                </span>
-              </div>
-              <h2 className="text-xl md:text-2xl font-bold font-serif-luxury text-white">
-                {step === 4 ? 'Reservation Confirmed & Keycard Issued' : `Reserve ${room.name}`}
-              </h2>
-            </div>
+        <div className="p-6 md:p-8 bg-[#F7F4EE] border-b border-[#E7DED0] flex items-center justify-between">
+          <div>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#A77D4B] block">
+              Reservation Procedure • Step 0{step} of 04
+            </span>
+            <h2 className="text-2xl md:text-3xl font-normal font-serif-luxury text-[#29241F] mt-1">
+              {step === 4 ? 'Reservation Confirmed' : `Reserve ${room.name}`}
+            </h2>
           </div>
 
           <button
             onClick={onClose}
             aria-label="Close booking modal"
-            className="p-2.5 rounded-full bg-[#193B32] hover:bg-[#1f473c] text-[#F6F1E7] border border-[#C6A76B]/30 transition-all"
+            className="p-2 rounded bg-white hover:bg-[#E7DED0]/50 text-[#29241F] border border-[#E7DED0] transition-all"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Step Progress Bar */}
-        <div className="grid grid-cols-4 border-b border-[#C6A76B]/25 text-[11px] font-medium text-center bg-[#102A26]/80">
-          <div className={`py-2.5 border-b-2 transition-all ${step >= 1 ? 'border-[#C6A76B] text-[#C6A76B] font-bold' : 'border-transparent text-[#F6F1E7]/50'}`}>
-            1. Dates & Add-ons
+        <div className="grid grid-cols-4 border-b border-[#E7DED0] text-[11px] font-medium text-center bg-[#F7F4EE]/50">
+          <div className={`py-3 border-b-2 transition-all ${step >= 1 ? 'border-[#29241F] text-[#29241F] font-semibold' : 'border-transparent text-[#777066]'}`}>
+            01. Dates & Add-ons
           </div>
-          <div className={`py-2.5 border-b-2 transition-all ${step >= 2 ? 'border-[#C6A76B] text-[#C6A76B] font-bold' : 'border-transparent text-[#F6F1E7]/50'}`}>
-            2. Guest Details
+          <div className={`py-3 border-b-2 transition-all ${step >= 2 ? 'border-[#29241F] text-[#29241F] font-semibold' : 'border-transparent text-[#777066]'}`}>
+            02. Guest Details
           </div>
-          <div className={`py-2.5 border-b-2 transition-all ${step >= 3 ? 'border-[#C6A76B] text-[#C6A76B] font-bold' : 'border-transparent text-[#F6F1E7]/50'}`}>
-            3. Payment Guarantee
+          <div className={`py-3 border-b-2 transition-all ${step >= 3 ? 'border-[#29241F] text-[#29241F] font-semibold' : 'border-transparent text-[#777066]'}`}>
+            03. Payment Method
           </div>
-          <div className={`py-2.5 border-b-2 transition-all ${step === 4 ? 'border-[#C6A76B] text-[#C6A76B] font-bold' : 'border-transparent text-[#F6F1E7]/50'}`}>
-            4. 3D Keycard & Pass
+          <div className={`py-3 border-b-2 transition-all ${step === 4 ? 'border-[#29241F] text-[#29241F] font-semibold' : 'border-transparent text-[#777066]'}`}>
+            04. Keycard & Pass
           </div>
         </div>
 
         {/* Content Body */}
-        <div className="p-5 md:p-8">
+        <div className="p-6 md:p-8">
           {/* STEP 1: DATES & ADD-ONS */}
           {step === 1 && (
             <form onSubmit={handleNextStep1} className="space-y-6">
-              {/* Room Snapshot Card */}
-              <div className="flex flex-col sm:flex-row gap-4 p-4 rounded-2xl bg-[#193B32] border border-[#C6A76B]/30 items-center">
+              {/* Room Snapshot */}
+              <div className="flex flex-col sm:flex-row gap-5 p-4 rounded border border-[#E7DED0] bg-[#F7F4EE]/40 items-center">
                 <img
                   src={room.images[0]}
                   alt={room.name}
-                  className="w-full sm:w-36 h-24 object-cover rounded-xl border border-[#C6A76B]/30 shrink-0"
+                  className="w-full sm:w-36 h-24 object-cover rounded border border-[#E7DED0] shrink-0"
                 />
                 <div className="flex-1 text-center sm:text-left">
-                  <span className="text-[10px] uppercase tracking-wider text-[#C6A76B] font-semibold font-mono">{room.category} Class • {room.floor}</span>
-                  <h3 className="text-lg font-bold text-white font-serif-luxury">{room.name}</h3>
-                  <p className="text-xs text-[#F6F1E7]/70 mt-0.5">{room.view} • {room.sizeSqFt} sq ft • {room.bedType}</p>
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-[#A77D4B] font-semibold">{room.category} • {room.floor}</span>
+                  <h3 className="text-xl font-normal text-[#29241F] font-serif-luxury">{room.name}</h3>
+                  <p className="text-xs text-[#777066] mt-0.5">{room.view} • {room.sizeSqFt} sq ft</p>
                 </div>
                 <div className="text-right shrink-0">
-                  <span className="text-2xl font-black text-[#C6A76B] font-mono">${room.pricePerNight}</span>
-                  <span className="text-xs text-[#F6F1E7]/70"> / night</span>
+                  <span className="text-2xl font-normal font-serif-luxury text-[#29241F]">{formatINR(room.pricePerNight)}</span>
+                  <span className="text-xs text-[#777066]"> / night</span>
                 </div>
               </div>
 
               {/* Date & Guest Inputs */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#C6A76B] mb-1.5 flex items-center gap-1 font-mono">
-                    <Calendar className="w-3.5 h-3.5" /> Check-In
+                <div className="p-3 rounded border border-[#E7DED0] bg-[#F7F4EE]/30">
+                  <label className="block text-[10px] uppercase tracking-[0.2em] font-medium text-[#777066] mb-1">
+                    Check-In
                   </label>
                   <input
                     type="date"
                     value={checkIn}
                     onChange={(e) => setCheckIn(e.target.value)}
                     required
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#193B32] border border-[#C6A76B]/40 text-[#F6F1E7] text-sm focus:outline-none focus:border-[#C6A76B]"
+                    className="w-full bg-transparent text-[#29241F] text-xs font-medium focus:outline-none"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#C6A76B] mb-1.5 flex items-center gap-1 font-mono">
-                    <Calendar className="w-3.5 h-3.5" /> Check-Out
+                <div className="p-3 rounded border border-[#E7DED0] bg-[#F7F4EE]/30">
+                  <label className="block text-[10px] uppercase tracking-[0.2em] font-medium text-[#777066] mb-1">
+                    Check-Out
                   </label>
                   <input
                     type="date"
                     value={checkOut}
                     onChange={(e) => setCheckOut(e.target.value)}
                     required
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#193B32] border border-[#C6A76B]/40 text-[#F6F1E7] text-sm focus:outline-none focus:border-[#C6A76B]"
+                    className="w-full bg-transparent text-[#29241F] text-xs font-medium focus:outline-none"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#C6A76B] mb-1.5 flex items-center gap-1 font-mono">
-                    <Users className="w-3.5 h-3.5" /> Adults
+                <div className="p-3 rounded border border-[#E7DED0] bg-[#F7F4EE]/30">
+                  <label className="block text-[10px] uppercase tracking-[0.2em] font-medium text-[#777066] mb-1">
+                    Adults
                   </label>
                   <select
                     value={adults}
                     onChange={(e) => setAdults(Number(e.target.value))}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#193B32] border border-[#C6A76B]/40 text-[#F6F1E7] text-sm focus:outline-none focus:border-[#C6A76B] cursor-pointer"
+                    className="w-full bg-transparent text-[#29241F] text-xs font-medium focus:outline-none cursor-pointer"
                   >
                     {[1, 2, 3, 4, 5, 6].map(num => (
-                      <option key={num} value={num} className="bg-[#102A26]">{num} Adult{num > 1 ? 's' : ''}</option>
+                      <option key={num} value={num}>{num} Adult{num > 1 ? 's' : ''}</option>
                     ))}
                   </select>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#C6A76B] mb-1.5 flex items-center gap-1 font-mono">
-                    <Users className="w-3.5 h-3.5" /> Children
+                <div className="p-3 rounded border border-[#E7DED0] bg-[#F7F4EE]/30">
+                  <label className="block text-[10px] uppercase tracking-[0.2em] font-medium text-[#777066] mb-1">
+                    Children
                   </label>
                   <select
                     value={children}
                     onChange={(e) => setChildren(Number(e.target.value))}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#193B32] border border-[#C6A76B]/40 text-[#F6F1E7] text-sm focus:outline-none focus:border-[#C6A76B] cursor-pointer"
+                    className="w-full bg-transparent text-[#29241F] text-xs font-medium focus:outline-none cursor-pointer"
                   >
                     {[0, 1, 2, 3].map(num => (
-                      <option key={num} value={num} className="bg-[#102A26]">{num} Child{num !== 1 ? 'ren' : ''}</option>
+                      <option key={num} value={num}>{num} Child{num !== 1 ? 'ren' : ''}</option>
                     ))}
                   </select>
                 </div>
@@ -261,9 +248,9 @@ export const BookingModal: React.FC<BookingModalProps> = ({ room, onClose }) => 
 
               {/* Bespoke Add-ons */}
               <div>
-                <h4 className="text-xs font-bold uppercase tracking-wider text-[#C6A76B] mb-3 flex items-center gap-1.5 font-mono">
-                  <Sparkles className="w-4 h-4" /> Enhance Your Stay (Bespoke Add-Ons)
-                </h4>
+                <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-[#A77D4B] block mb-3">
+                  Tailored Privileges & Services
+                </span>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {LUXURY_ADD_ONS.map((addon) => {
                     const isSelected = selectedAddOns.some(a => a.id === addon.id);
@@ -271,23 +258,23 @@ export const BookingModal: React.FC<BookingModalProps> = ({ room, onClose }) => 
                       <div
                         key={addon.id}
                         onClick={() => toggleAddOn(addon)}
-                        className={`p-3.5 rounded-2xl border cursor-pointer transition-all flex items-start gap-3 ${
+                        className={`p-4 rounded border cursor-pointer transition-all flex items-start gap-3.5 ${
                           isSelected
-                            ? 'bg-[#193B32] border-[#C6A76B] shadow-lg'
-                            : 'bg-[#102A26] border-[#C6A76B]/25 hover:border-[#C6A76B]/60'
+                            ? 'bg-[#E7DED0]/50 border-[#A77D4B]'
+                            : 'bg-white border-[#E7DED0] hover:border-[#A77D4B]/50'
                         }`}
                       >
-                        <div className={`w-5 h-5 rounded-md mt-0.5 flex items-center justify-center shrink-0 border ${
-                          isSelected ? 'bg-[#C6A76B] border-[#C6A76B] text-[#102A26]' : 'border-[#C6A76B]/40 bg-[#193B32]'
+                        <div className={`w-4 h-4 rounded-sm mt-0.5 flex items-center justify-center shrink-0 border ${
+                          isSelected ? 'bg-[#29241F] border-[#29241F] text-white' : 'border-[#E7DED0] bg-white'
                         }`}>
-                          {isSelected && <Check className="w-3.5 h-3.5 font-bold" />}
+                          {isSelected && <Check className="w-3 h-3" />}
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-white">{addon.name}</span>
-                            <span className="text-xs font-bold text-[#C6A76B] font-mono">+${addon.price}</span>
+                            <span className="text-xs font-medium text-[#29241F]">{addon.name}</span>
+                            <span className="text-xs font-mono text-[#A77D4B]">+{formatINR(addon.price)}</span>
                           </div>
-                          <p className="text-[11px] text-[#F6F1E7]/70 mt-1 leading-snug">{addon.description}</p>
+                          <p className="text-[11px] text-[#777066] mt-1 font-light leading-snug">{addon.description}</p>
                         </div>
                       </div>
                     );
@@ -295,39 +282,39 @@ export const BookingModal: React.FC<BookingModalProps> = ({ room, onClose }) => 
                 </div>
               </div>
 
-              {/* Pricing Breakdown Card */}
-              <div className="p-4 rounded-2xl bg-[#193B32] border border-[#C6A76B]/30 space-y-2 text-xs">
-                <div className="flex justify-between text-[#F6F1E7]/80">
-                  <span>Room rate ({nights} night{nights > 1 ? 's' : ''} × ${room.pricePerNight})</span>
-                  <span className="font-semibold text-white font-mono">${roomSubtotal.toLocaleString()}</span>
+              {/* Summary */}
+              <div className="p-5 rounded border border-[#E7DED0] bg-[#F7F4EE]/50 space-y-2 text-xs">
+                <div className="flex justify-between text-[#777066]">
+                  <span>Room rate ({nights} night{nights > 1 ? 's' : ''} × {formatINR(room.pricePerNight)})</span>
+                  <span className="font-mono text-[#29241F]">{formatINR(roomSubtotal)}</span>
                 </div>
                 {addOnsSubtotal > 0 && (
-                  <div className="flex justify-between text-[#F6F1E7]/80">
-                    <span>Selected Luxury Add-Ons</span>
-                    <span className="font-semibold text-white font-mono">+${addOnsSubtotal.toLocaleString()}</span>
+                  <div className="flex justify-between text-[#777066]">
+                    <span>Selected Add-ons</span>
+                    <span className="font-mono text-[#29241F]">+{formatINR(addOnsSubtotal)}</span>
                   </div>
                 )}
-                <div className="flex justify-between text-[#F6F1E7]/60 text-[11px]">
-                  <span>Resort Fees & Luxury Hospitality Tax (10%)</span>
-                  <span className="font-mono">${taxesAndFees.toLocaleString()}</span>
+                <div className="flex justify-between text-[#777066] text-[11px]">
+                  <span>Hospitality & Tourism Tax (12%)</span>
+                  <span className="font-mono">{formatINR(taxesAndFees)}</span>
                 </div>
-                <div className="pt-2 border-t border-[#C6A76B]/25 flex justify-between items-baseline">
-                  <span className="text-sm font-bold text-white uppercase tracking-wider font-mono">Total Investment</span>
+                <div className="pt-3 border-t border-[#E7DED0] flex justify-between items-baseline">
+                  <span className="text-sm uppercase tracking-wider text-[#29241F] font-medium">Total Rate</span>
                   <div className="text-right">
-                    <span className="text-2xl font-black text-[#C6A76B] font-mono">${grandTotal.toLocaleString()}</span>
-                    <span className="text-[10px] text-[#F6F1E7]/70 block">Includes all privileges & taxes</span>
+                    <span className="text-3xl font-normal font-serif-luxury text-[#29241F]">{formatINR(grandTotal)}</span>
+                    <span className="text-[10px] text-[#777066] block">All taxes & resident privileges included</span>
                   </div>
                 </div>
               </div>
 
-              {/* Next Button */}
+              {/* Button */}
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="py-3.5 px-8 rounded-xl gold-gradient-btn font-bold text-sm tracking-wider uppercase flex items-center gap-2 group shadow-xl"
+                  className="btn-primary-espresso flex items-center gap-2"
                 >
                   <span>Continue to Guest Details</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             </form>
@@ -338,8 +325,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({ room, onClose }) => 
             <form onSubmit={handleNextStep2} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#C6A76B] mb-1.5 font-mono">
-                    Primary Guest Full Name *
+                  <label className="block text-[10px] uppercase tracking-[0.2em] font-medium text-[#777066] mb-1.5">
+                    Primary Guest Name *
                   </label>
                   <input
                     type="text"
@@ -347,13 +334,13 @@ export const BookingModal: React.FC<BookingModalProps> = ({ room, onClose }) => 
                     placeholder="e.g. Lord Alexander Vance"
                     value={guestName}
                     onChange={(e) => setGuestName(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-[#193B32] border border-[#C6A76B]/40 text-[#F6F1E7] text-sm focus:outline-none focus:border-[#C6A76B]"
+                    className="w-full px-4 py-3 rounded border border-[#E7DED0] bg-[#F7F4EE]/30 text-[#29241F] text-xs focus:outline-none focus:border-[#29241F]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#C6A76B] mb-1.5 font-mono">
-                    VIP Email Address *
+                  <label className="block text-[10px] uppercase tracking-[0.2em] font-medium text-[#777066] mb-1.5">
+                    Email Address *
                   </label>
                   <input
                     type="email"
@@ -361,46 +348,44 @@ export const BookingModal: React.FC<BookingModalProps> = ({ room, onClose }) => 
                     placeholder="e.g. a.vance@benchmark-luxury.com"
                     value={guestEmail}
                     onChange={(e) => setGuestEmail(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-[#193B32] border border-[#C6A76B]/40 text-[#F6F1E7] text-sm focus:outline-none focus:border-[#C6A76B]"
+                    className="w-full px-4 py-3 rounded border border-[#E7DED0] bg-[#F7F4EE]/30 text-[#29241F] text-xs focus:outline-none focus:border-[#29241F]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#C6A76B] mb-1.5 font-mono">
-                    Mobile Phone (For Keycard & Concierge SMS)
+                  <label className="block text-[10px] uppercase tracking-[0.2em] font-medium text-[#777066] mb-1.5">
+                    Mobile Phone
                   </label>
                   <input
                     type="tel"
                     placeholder="e.g. +1 (555) 392-8812"
                     value={guestPhone}
                     onChange={(e) => setGuestPhone(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-[#193B32] border border-[#C6A76B]/40 text-[#F6F1E7] text-sm focus:outline-none focus:border-[#C6A76B]"
+                    className="w-full px-4 py-3 rounded border border-[#E7DED0] bg-[#F7F4EE]/30 text-[#29241F] text-xs focus:outline-none focus:border-[#29241F]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#C6A76B] mb-1.5 font-mono">
-                    Benchmark Club Membership Status
+                  <label className="block text-[10px] uppercase tracking-[0.2em] font-medium text-[#777066] mb-1.5">
+                    Guest Allocation Tier
                   </label>
-                  <div className="px-4 py-3 rounded-xl bg-[#193B32] border border-[#C6A76B]/40 text-[#C6A76B] text-sm flex items-center justify-between font-mono">
-                    <span className="font-semibold flex items-center gap-1.5">
-                      <Sparkles className="w-4 h-4 text-[#C6A76B]" /> Sovereign Sapphire VIP
-                    </span>
-                    <span className="text-[10px] text-[#F6F1E7]/70">Complimentary</span>
+                  <div className="px-4 py-3 rounded border border-[#E7DED0] bg-[#F7F4EE]/30 text-[#A77D4B] text-xs flex items-center justify-between font-medium">
+                    <span>Sovereign Resident</span>
+                    <span className="text-[10px] text-[#777066]">Complimentary</span>
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#C6A76B] mb-1.5 font-mono">
-                  Bespoke Requests & Dietary / Concierge Instructions
+                <label className="block text-[10px] uppercase tracking-[0.2em] font-medium text-[#777066] mb-1.5">
+                  Special Notes & Concierge Inquiries
                 </label>
                 <textarea
                   rows={3}
-                  placeholder="e.g. Preferred pillow firmness, late arrival timing, champagne preference, anniversary notes..."
+                  placeholder="Estimated arrival time, dietary considerations, preferred room temperature..."
                   value={specialRequests}
                   onChange={(e) => setSpecialRequests(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-[#193B32] border border-[#C6A76B]/40 text-[#F6F1E7] text-sm focus:outline-none focus:border-[#C6A76B] resize-none"
+                  className="w-full px-4 py-3 rounded border border-[#E7DED0] bg-[#F7F4EE]/30 text-[#29241F] text-xs focus:outline-none focus:border-[#29241F] resize-none"
                 />
               </div>
 
@@ -408,80 +393,72 @@ export const BookingModal: React.FC<BookingModalProps> = ({ room, onClose }) => 
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="py-3 px-5 rounded-xl border border-[#C6A76B]/40 text-[#F6F1E7] hover:border-[#C6A76B] text-xs font-semibold flex items-center gap-1.5"
+                  className="btn-outline-espresso"
                 >
-                  <ArrowLeft className="w-4 h-4" /> Back to Dates
+                  Back
                 </button>
                 <button
                   type="submit"
-                  className="py-3.5 px-8 rounded-xl gold-gradient-btn font-bold text-sm tracking-wider uppercase flex items-center gap-2 group shadow-xl"
+                  className="btn-primary-espresso flex items-center gap-2"
                 >
                   <span>Proceed to Payment</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             </form>
           )}
 
-          {/* STEP 3: PAYMENT METHOD */}
+          {/* STEP 3: PAYMENT */}
           {step === 3 && (
             <form onSubmit={handleConfirmReservation} className="space-y-6">
-              {/* Payment Option Selector */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('card')}
-                  className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between ${
+                  className={`p-4 rounded border text-left transition-all ${
                     paymentMethod === 'card'
-                      ? 'bg-[#193B32] border-[#C6A76B] shadow-lg'
-                      : 'bg-[#102A26] border-[#C6A76B]/30 hover:border-[#C6A76B]/60'
+                      ? 'bg-[#E7DED0]/50 border-[#29241F]'
+                      : 'bg-white border-[#E7DED0] hover:border-[#777066]'
                   }`}
                 >
-                  <CreditCard className={`w-6 h-6 mb-2 ${paymentMethod === 'card' ? 'text-[#C6A76B]' : 'text-[#F6F1E7]/50'}`} />
-                  <div>
-                    <div className="text-xs font-bold text-white">Credit / Black Card</div>
-                    <div className="text-[10px] text-[#F6F1E7]/70 mt-0.5">Amex Centurion, Visa, MC</div>
-                  </div>
+                  <CreditCard className="w-5 h-5 mb-2 text-[#29241F]" />
+                  <div className="text-xs font-medium text-[#29241F]">Credit Card</div>
+                  <div className="text-[10px] text-[#777066] mt-0.5">Amex, Visa, Mastercard</div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('upi')}
-                  className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between ${
+                  className={`p-4 rounded border text-left transition-all ${
                     paymentMethod === 'upi'
-                      ? 'bg-[#193B32] border-[#C6A76B] shadow-lg'
-                      : 'bg-[#102A26] border-[#C6A76B]/30 hover:border-[#C6A76B]/60'
+                      ? 'bg-[#E7DED0]/50 border-[#29241F]'
+                      : 'bg-white border-[#E7DED0] hover:border-[#777066]'
                   }`}
                 >
-                  <QrCode className={`w-6 h-6 mb-2 ${paymentMethod === 'upi' ? 'text-[#C6A76B]' : 'text-[#F6F1E7]/50'}`} />
-                  <div>
-                    <div className="text-xs font-bold text-white">UPI / Instant Pay</div>
-                    <div className="text-[10px] text-[#F6F1E7]/70 mt-0.5">Instant QR / Apple Pay</div>
-                  </div>
+                  <QrCode className="w-5 h-5 mb-2 text-[#29241F]" />
+                  <div className="text-xs font-medium text-[#29241F]">Instant Transfer</div>
+                  <div className="text-[10px] text-[#777066] mt-0.5">UPI / Apple Pay</div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('pay_at_hotel')}
-                  className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between ${
+                  className={`p-4 rounded border text-left transition-all ${
                     paymentMethod === 'pay_at_hotel'
-                      ? 'bg-[#193B32] border-[#C6A76B] shadow-lg'
-                      : 'bg-[#102A26] border-[#C6A76B]/30 hover:border-[#C6A76B]/60'
+                      ? 'bg-[#E7DED0]/50 border-[#29241F]'
+                      : 'bg-white border-[#E7DED0] hover:border-[#777066]'
                   }`}
                 >
-                  <Building className={`w-6 h-6 mb-2 ${paymentMethod === 'pay_at_hotel' ? 'text-[#C6A76B]' : 'text-[#F6F1E7]/50'}`} />
-                  <div>
-                    <div className="text-xs font-bold text-white">Pay at Concierge</div>
-                    <div className="text-[10px] text-[#F6F1E7]/70 mt-0.5">Zero payment today</div>
-                  </div>
+                  <Building className="w-5 h-5 mb-2 text-[#29241F]" />
+                  <div className="text-xs font-medium text-[#29241F]">Pay on Arrival</div>
+                  <div className="text-[10px] text-[#777066] mt-0.5">Zero charge today</div>
                 </button>
               </div>
 
-              {/* Payment Details Form */}
               {paymentMethod === 'card' && (
-                <div className="p-5 rounded-2xl bg-[#193B32] border border-[#C6A76B]/30 space-y-4">
+                <div className="p-5 rounded border border-[#E7DED0] bg-[#F7F4EE]/40 space-y-4">
                   <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#C6A76B] mb-1 font-mono">
+                    <label className="block text-[10px] uppercase tracking-wider text-[#777066] mb-1">
                       Cardholder Name
                     </label>
                     <input
@@ -489,12 +466,12 @@ export const BookingModal: React.FC<BookingModalProps> = ({ room, onClose }) => 
                       placeholder="Name on card"
                       value={cardHolder || guestName}
                       onChange={(e) => setCardHolder(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#102A26] border border-[#C6A76B]/40 text-[#F6F1E7] text-sm focus:outline-none focus:border-[#C6A76B]"
+                      className="w-full px-3.5 py-2.5 rounded border border-[#E7DED0] bg-white text-[#29241F] text-xs focus:outline-none focus:border-[#29241F]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#C6A76B] mb-1 font-mono">
+                    <label className="block text-[10px] uppercase tracking-wider text-[#777066] mb-1">
                       Card Number
                     </label>
                     <input
@@ -502,13 +479,13 @@ export const BookingModal: React.FC<BookingModalProps> = ({ room, onClose }) => 
                       placeholder="•••• •••• •••• 4242"
                       value={cardNumber}
                       onChange={(e) => setCardNumber(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#102A26] border border-[#C6A76B]/40 text-[#F6F1E7] text-sm focus:outline-none focus:border-[#C6A76B] font-mono"
+                      className="w-full px-3.5 py-2.5 rounded border border-[#E7DED0] bg-white text-[#29241F] text-xs focus:outline-none focus:border-[#29241F] font-mono"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold uppercase tracking-wider text-[#C6A76B] mb-1 font-mono">
+                      <label className="block text-[10px] uppercase tracking-wider text-[#777066] mb-1">
                         Expiry Date
                       </label>
                       <input
@@ -516,12 +493,12 @@ export const BookingModal: React.FC<BookingModalProps> = ({ room, onClose }) => 
                         placeholder="MM / YY"
                         value={cardExpiry}
                         onChange={(e) => setCardExpiry(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-[#102A26] border border-[#C6A76B]/40 text-[#F6F1E7] text-sm focus:outline-none focus:border-[#C6A76B] font-mono"
+                        className="w-full px-3.5 py-2.5 rounded border border-[#E7DED0] bg-white text-[#29241F] text-xs focus:outline-none focus:border-[#29241F] font-mono"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold uppercase tracking-wider text-[#C6A76B] mb-1 font-mono">
-                        Security Code (CVV)
+                      <label className="block text-[10px] uppercase tracking-wider text-[#777066] mb-1">
+                        CVC
                       </label>
                       <input
                         type="password"
@@ -529,7 +506,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ room, onClose }) => 
                         placeholder="•••"
                         value={cardCvc}
                         onChange={(e) => setCardCvc(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-[#102A26] border border-[#C6A76B]/40 text-[#F6F1E7] text-sm focus:outline-none focus:border-[#C6A76B] font-mono"
+                        className="w-full px-3.5 py-2.5 rounded border border-[#E7DED0] bg-white text-[#29241F] text-xs focus:outline-none focus:border-[#29241F] font-mono"
                       />
                     </div>
                   </div>
@@ -537,41 +514,37 @@ export const BookingModal: React.FC<BookingModalProps> = ({ room, onClose }) => 
               )}
 
               {paymentMethod === 'upi' && (
-                <div className="p-6 rounded-2xl bg-[#193B32] border border-[#C6A76B]/30 text-center space-y-3">
-                  <div className="inline-block p-3 rounded-2xl bg-[#F6F1E7] shadow-xl">
-                    <QrCode className="w-28 h-28 text-[#102A26]" />
+                <div className="p-6 rounded border border-[#E7DED0] bg-[#F7F4EE]/40 text-center space-y-3">
+                  <div className="inline-block p-3 rounded bg-white shadow-sm border border-[#E7DED0]">
+                    <QrCode className="w-24 h-24 text-[#29241F]" />
                   </div>
                   <div>
-                    <span className="text-xs font-bold text-white block">Scan to Authorize with any UPI App</span>
-                    <span className="text-[11px] font-mono text-[#C6A76B]">benchmarkhotel@luxuryicici</span>
+                    <span className="text-xs font-medium text-[#29241F] block">Scan with banking or UPI app</span>
+                    <span className="text-[11px] font-mono text-[#A77D4B]">benchmark@luxuryicici</span>
                   </div>
-                  <p className="text-xs text-[#F6F1E7]/70 max-w-sm mx-auto">
-                    Instant 256-bit encrypted transfer with instant authorization receipt.
-                  </p>
                 </div>
               )}
 
               {paymentMethod === 'pay_at_hotel' && (
-                <div className="p-5 rounded-2xl bg-[#193B32] border border-[#C6A76B]/40 text-xs text-[#F6F1E7] space-y-2">
-                  <div className="flex items-center gap-2 text-[#C6A76B] font-bold text-sm">
-                    <CheckCircle2 className="w-5 h-5" />
-                    <span>Reserve Now, Settle Upon Arrival</span>
+                <div className="p-5 rounded border border-[#E7DED0] bg-[#F7F4EE]/40 text-xs text-[#29241F] space-y-2">
+                  <div className="flex items-center gap-2 text-[#A77D4B] font-medium text-sm">
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>Reserve Now, Settle Upon Check-In</span>
                   </div>
-                  <p className="leading-relaxed text-[#F6F1E7]/80">
-                    Your suite will be held guaranteed. No deposit will be charged to your card today. You may pay using cash, credit card, or bank transfer during your personal check-in at the Executive Reception desk.
+                  <p className="leading-relaxed text-[#777066] font-light">
+                    Your suite is fully guaranteed. No charge will be placed today. Settle upon arrival at reception.
                   </p>
                 </div>
               )}
 
-              {/* Total & Confirmation Security Note */}
-              <div className="flex flex-col sm:flex-row items-center justify-between p-4 rounded-2xl bg-[#193B32] border border-[#C6A76B]/30 gap-3">
-                <div className="flex items-center gap-2 text-xs text-[#F6F1E7]/70">
-                  <Lock className="w-4 h-4 text-[#C6A76B]" />
-                  <span>256-Bit Bank Grade SSL Encryption • Free Cancellation</span>
+              <div className="flex items-center justify-between p-4 rounded border border-[#E7DED0] bg-[#F7F4EE]/50">
+                <div className="flex items-center gap-2 text-xs text-[#777066]">
+                  <Lock className="w-3.5 h-3.5 text-[#A77D4B]" />
+                  <span>256-bit Encrypted Reservation</span>
                 </div>
                 <div className="text-right">
-                  <span className="text-xs text-[#F6F1E7]/70 block font-mono">Total Due:</span>
-                  <span className="text-2xl font-black text-[#C6A76B] font-mono">${grandTotal.toLocaleString()}</span>
+                  <span className="text-xs text-[#777066] block">Total:</span>
+                  <span className="text-2xl font-normal font-serif-luxury text-[#29241F]">{formatINR(grandTotal)}</span>
                 </div>
               </div>
 
@@ -579,63 +552,53 @@ export const BookingModal: React.FC<BookingModalProps> = ({ room, onClose }) => 
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="py-3 px-5 rounded-xl border border-[#C6A76B]/40 text-[#F6F1E7] hover:border-[#C6A76B] text-xs font-semibold flex items-center gap-1.5"
+                  className="btn-outline-espresso"
                 >
-                  <ArrowLeft className="w-4 h-4" /> Back to Details
+                  Back
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="py-3.5 px-8 rounded-xl gold-gradient-btn font-bold text-sm tracking-wider uppercase flex items-center gap-2 group shadow-xl disabled:opacity-50"
+                  className="btn-primary-espresso disabled:opacity-50"
                 >
-                  {isSubmitting ? (
-                    <span>Confirming Reservation...</span>
-                  ) : (
-                    <>
-                      <span>Complete VIP Booking</span>
-                      <CheckCircle2 className="w-4 h-4" />
-                    </>
-                  )}
+                  {isSubmitting ? 'Confirming...' : 'Complete Reservation'}
                 </button>
               </div>
             </form>
           )}
 
-          {/* STEP 4: CONFIRMATION & 3D KEYCARD */}
+          {/* STEP 4: CONFIRMATION & KEYCARD */}
           {step === 4 && (confirmedBookingData || latestConfirmedBooking) && (
             <div className="space-y-6 text-center animate-fadeIn">
               <div className="max-w-md mx-auto space-y-2">
-                <div className="w-14 h-14 rounded-full bg-[#193B32] border border-[#C6A76B]/60 text-[#C6A76B] mx-auto flex items-center justify-center shadow-lg">
-                  <CheckCircle2 className="w-8 h-8" />
-                </div>
-                <h3 className="text-2xl font-bold font-serif-luxury text-white">
-                  Welcome to The Benchmark Experience
+                <span className="text-[10px] uppercase tracking-[0.25em] text-[#A77D4B] font-semibold block font-sans">
+                  Confirmed Residence
+                </span>
+                <h3 className="text-3xl font-normal font-serif-luxury text-[#29241F]">
+                  We look forward to your stay.
                 </h3>
-                <p className="text-xs text-[#F6F1E7]/80 leading-relaxed">
-                  Your reservation is confirmed. Your personalized 3D Digital Keycard is ready. We have dispatched a confirmation package to <span className="text-[#C6A76B] font-semibold">{guestEmail}</span>.
+                <p className="text-xs text-[#777066] font-light">
+                  A reservation package has been dispatched to {guestEmail}. Below is your digital mobile room pass.
                 </p>
               </div>
 
-              {/* Render 3D Digital Keycard */}
               <DigitalKeycardPass booking={confirmedBookingData || latestConfirmedBooking!} />
 
-              {/* Action Buttons */}
-              <div className="flex flex-wrap items-center justify-center gap-3 pt-4 border-t border-[#C6A76B]/25">
+              <div className="flex items-center justify-center gap-4 pt-6 border-t border-[#E7DED0]">
                 <button
                   onClick={onClose}
-                  className="py-3 px-6 rounded-xl bg-[#193B32] hover:bg-[#1f473c] text-white text-xs font-semibold tracking-wider uppercase transition-all border border-[#C6A76B]/30"
+                  className="btn-outline-espresso"
                 >
-                  Return to Main Sanctuary
+                  Return to Home
                 </button>
                 <button
                   onClick={() => {
                     onClose();
                     setCurrentView('admin');
                   }}
-                  className="py-3 px-6 rounded-xl bg-[#C6A76B]/20 hover:bg-[#C6A76B]/30 text-[#C6A76B] border border-[#C6A76B]/60 text-xs font-bold tracking-wider uppercase transition-all flex items-center gap-1.5 shadow-md"
+                  className="btn-bronze"
                 >
-                  <span>View in Admin Portal</span>
-                  <ArrowRight className="w-4 h-4" />
+                  View in Admin Portal
                 </button>
               </div>
             </div>

@@ -40,17 +40,21 @@ interface HotelContextType {
 const HotelContext = createContext<HotelContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  ROOMS: 'benchmark_hotel_rooms_v1',
-  BOOKINGS: 'benchmark_hotel_bookings_v1',
+  ROOMS: 'benchmark_hotel_rooms_v3_ooty',
+  BOOKINGS: 'benchmark_hotel_bookings_v3_ooty',
 };
 
 export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Load initial rooms
+  // Load initial rooms (ensuring Indian Rupees values)
   const [rooms, setRooms] = useState<Room[]>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEYS.ROOMS);
       if (stored) {
-        return JSON.parse(stored);
+        const parsed: Room[] = JSON.parse(stored);
+        // Verify pricing is in INR (> 10000)
+        if (parsed.length > 0 && parsed[0].pricePerNight >= 10000) {
+          return parsed;
+        }
       }
     } catch {
       // ignore
@@ -58,12 +62,15 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return INITIAL_ROOMS;
   });
 
-  // Load initial bookings
+  // Load initial bookings (ensuring Indian Rupees values)
   const [bookings, setBookings] = useState<Booking[]>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEYS.BOOKINGS);
       if (stored) {
-        return JSON.parse(stored);
+        const parsed: Booking[] = JSON.parse(stored);
+        if (parsed.length > 0 && parsed[0].totalPrice >= 10000) {
+          return parsed;
+        }
       }
     } catch {
       // ignore
@@ -86,7 +93,7 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     adults: 2,
     children: 0,
     category: 'All',
-    priceRange: [200, 3000],
+    priceRange: [25000, 300000],
   });
 
   const [selectedRoomFor3D, setSelectedRoomFor3D] = useState<Room | null>(null);

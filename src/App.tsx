@@ -2,7 +2,9 @@ import React from 'react';
 import { HotelProvider, useHotel } from './context/HotelContext';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
+import { TowerExplorer } from './components/TowerExplorer';
 import { RoomsShowcase } from './components/RoomsShowcase';
+import { StayCurator } from './components/StayCurator';
 import { InteractiveAmenities } from './components/InteractiveAmenities';
 import { PrivilegesSection } from './components/PrivilegesSection';
 import { LocationAndContact } from './components/LocationAndContact';
@@ -11,6 +13,7 @@ import { Room3DViewer } from './components/Room3DViewer';
 import { BookingModal } from './components/BookingModal';
 import { ReservationLookupModal } from './components/ReservationLookupModal';
 import { AdminPortal } from './components/AdminPortal';
+import { SensorySoundscape } from './components/SensorySoundscape';
 
 const HotelAppContent: React.FC = () => {
   const {
@@ -37,7 +40,9 @@ const HotelAppContent: React.FC = () => {
         ) : (
           <div className="space-y-4">
             <HeroSection />
+            <TowerExplorer />
             <RoomsShowcase />
+            <StayCurator />
             <InteractiveAmenities />
             <PrivilegesSection />
             <LocationAndContact />
@@ -45,6 +50,9 @@ const HotelAppContent: React.FC = () => {
           </div>
         )}
       </main>
+
+      {/* Ambient Sensory Soundscape Floating Widget */}
+      {currentView === 'guest' && <SensorySoundscape />}
 
       {/* 3D Virtual Room Explorer Modal */}
       {selectedRoomFor3D && (
@@ -84,4 +92,3 @@ export function App() {
 }
 
 export default App;
-

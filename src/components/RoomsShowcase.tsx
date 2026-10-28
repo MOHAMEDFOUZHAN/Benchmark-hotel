@@ -1,17 +1,12 @@
 import React, { useState } from 'react';
 import { useHotel } from '../context/HotelContext';
 import { RoomCategory } from '../types/hotel';
+import { formatINR } from '../utils/formatters';
 import {
-  Sparkles,
-  Bed,
-  Users,
-  Maximize2,
-  Eye,
-  ArrowRight,
-  Star,
-  Flame,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  ArrowRight,
+  Compass
 } from 'lucide-react';
 
 export const RoomsShowcase: React.FC = () => {
@@ -49,244 +44,177 @@ export const RoomsShowcase: React.FC = () => {
   };
 
   return (
-    <section id="suites" className="py-20 px-4 md:px-8 max-w-7xl mx-auto space-y-12">
+    <section id="suites" className="py-24 px-6 md:px-12 max-w-7xl mx-auto space-y-16 bg-[#F7F4EE]">
       {/* Section Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-8 border-b border-[#E7DED0]">
         <div>
-          <div className="flex items-center gap-2 text-xs uppercase font-mono tracking-widest text-[#C6A76B]">
-            <Sparkles className="w-3.5 h-3.5" />
-            Bespoke Accommodations
-          </div>
-          <h2 className="text-3xl md:text-5xl font-extrabold font-serif-luxury text-[#F6F1E7] mt-2">
-            The Benchmark Suite Collection
+          <span className="text-[10px] uppercase tracking-[0.28em] text-[#A77D4B] font-semibold block mb-2 font-sans">
+            Private Sanctuaries
+          </span>
+          <h2 className="text-4xl md:text-6xl font-normal font-serif-luxury text-[#29241F]">
+            The Suite Collection
           </h2>
-          <p className="text-xs md:text-sm text-[#F6F1E7]/75 max-w-xl mt-2 leading-relaxed">
-            Each suite is an architectural tour de force, designed with custom Italian furnishings, floor-to-ceiling panoramic glass, and personal butler service.
+          <p className="text-xs md:text-sm text-[#777066] max-w-xl mt-3 font-light leading-relaxed">
+            Every room is designed with tactile travertine limestone, raw Belgian linen, floor-to-ceiling glass, and unobstructed Mediterranean views.
           </p>
         </div>
 
-        {/* Category Pills */}
+        {/* Minimalist Filter Tabs */}
         <div className="flex flex-wrap gap-2">
           {categories.map(cat => (
             <button
               key={cat.value}
               onClick={() => setActiveCategory(cat.value)}
-              className={`py-2 px-4 rounded-xl text-xs font-semibold tracking-wider transition-all flex items-center gap-2 border ${
+              className={`py-2 px-4 rounded text-xs tracking-[0.14em] uppercase transition-all border ${
                 activeCategory === cat.value
-                  ? 'bg-[#C6A76B] text-[#102A26] border-[#C6A76B] shadow-lg font-bold'
-                  : 'bg-[#193B32] text-[#F6F1E7]/80 border-[#C6A76B]/30 hover:border-[#C6A76B]/70'
+                  ? 'bg-[#29241F] text-[#F7F4EE] border-[#29241F] font-semibold'
+                  : 'bg-white text-[#777066] border-[#E7DED0] hover:border-[#29241F] hover:text-[#29241F]'
               }`}
             >
               <span>{cat.label}</span>
-              <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                activeCategory === cat.value ? 'bg-[#102A26] text-[#F6F1E7]' : 'bg-[#102A26] text-[#C6A76B]'
-              }`}>
-                {cat.count}
-              </span>
+              <span className="ml-1.5 opacity-60 text-[10px] font-mono">({cat.count})</span>
             </button>
           ))}
         </div>
       </div>
 
-      {/* 3D FEATURE CALLOUT BANNER */}
-      <div id="3d-tour" className="relative p-6 md:p-8 rounded-3xl bg-gradient-to-r from-[#193B32] via-[#102A26] to-[#193B32] border border-[#C6A76B]/40 overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="space-y-2 max-w-xl">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#102A26] text-[#C6A76B] border border-[#C6A76B]/50 text-xs font-semibold font-mono">
-            <Sparkles className="w-3.5 h-3.5" />
-            Industry First: Real-Time 3D Digital Twin
-          </div>
-          <h3 className="text-2xl md:text-3xl font-bold font-serif-luxury text-[#F6F1E7]">
-            Experience Your Suite Before You Check In
+      {/* EDITORIAL 3D TOUR INVITATION BANNER */}
+      <div id="3d-tour" className="p-8 md:p-12 rounded-lg bg-[#E7DED0]/60 border border-[#E7DED0] flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="space-y-3 max-w-2xl">
+          <span className="text-[10px] uppercase tracking-[0.25em] text-[#A77D4B] font-semibold block">
+            Spatial Exploration
+          </span>
+          <h3 className="text-3xl md:text-4xl font-normal font-serif-luxury text-[#29241F]">
+            Tour your residence before arrival.
           </h3>
-          <p className="text-xs text-[#F6F1E7]/80 leading-relaxed">
-            Rotate 360°, inspect marble tubs, switch between sunset and midnight mood lighting, and examine bespoke amenities in interactive WebGL 3D.
+          <p className="text-xs md:text-sm text-[#777066] leading-relaxed font-light">
+            Rotate 360°, inspect custom furniture craft, and view realistic natural daylight and evening sunset illumination in our interactive 3D spatial twin.
           </p>
         </div>
 
         <button
           onClick={() => setSelectedRoomFor3D(rooms[0])}
-          className="py-3.5 px-7 rounded-2xl gold-gradient-btn font-extrabold text-xs uppercase tracking-widest flex items-center gap-2 shrink-0 shadow-xl"
+          className="btn-primary-espresso shrink-0 flex items-center gap-2"
         >
-          <Sparkles className="w-4 h-4" />
-          <span>Launch Penthouse in 3D</span>
+          <Compass className="w-3.5 h-3.5" />
+          <span>Launch Penthouse 3D Tour</span>
         </button>
       </div>
 
       {/* ROOMS GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredRooms.map((room) => {
           const currentImgIdx = activeImageIndexes[room.id] || 0;
-          const isLowInventory = room.availableInventory <= 2;
 
           return (
             <div
               key={room.id}
-              className="bg-[#193B32]/85 rounded-3xl overflow-hidden border border-[#C6A76B]/30 hover:border-[#C6A76B]/70 transition-all duration-300 flex flex-col justify-between group shadow-xl hover:shadow-2xl"
+              className="card-ivory rounded-lg overflow-hidden flex flex-col justify-between group"
             >
               <div>
-                {/* Image Showcase with Carousel Arrows */}
-                <div className="relative aspect-[16/10] overflow-hidden select-none bg-[#102A26]">
+                {/* Image Showcase */}
+                <div className="relative aspect-[16/11] overflow-hidden select-none bg-[#E7DED0]">
                   <img
                     src={room.images[currentImgIdx]}
                     alt={room.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
 
-                  {/* Gradient bottom overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#193B32] via-transparent to-black/30 pointer-events-none" />
-
-                  {/* Top Badges */}
-                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
-                    <span className="px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase bg-[#102A26]/90 backdrop-blur-md text-[#C6A76B] border border-[#C6A76B]/40 font-mono">
+                  {/* Top Category Badge */}
+                  <div className="absolute top-4 left-4 z-10">
+                    <span className="px-3 py-1 rounded bg-[#F7F4EE]/95 backdrop-blur-sm text-[9px] uppercase tracking-[0.2em] font-medium text-[#29241F] border border-[#E7DED0]">
                       {room.category}
                     </span>
-
-                    {/* Interactive 3D Tour Button on Image */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedRoomFor3D(room);
-                      }}
-                      className="px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-[#C6A76B] text-[#102A26] shadow-lg flex items-center gap-1.5 hover:scale-105 transition-transform"
-                      title="Launch 3D Room Viewer"
-                    >
-                      <Sparkles className="w-3.5 h-3.5" />
-                      <span>3D View</span>
-                    </button>
                   </div>
 
-                  {/* Image Carousel Nav Buttons */}
+                  {/* Carousel Controls */}
                   {room.images.length > 1 && (
                     <div className="absolute inset-y-0 inset-x-2 flex items-center justify-between pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
                       <button
                         onClick={(e) => handlePrevImage(room.id, room.images.length, e)}
-                        className="p-1.5 rounded-full bg-[#102A26]/80 hover:bg-[#102A26] text-white pointer-events-auto border border-[#C6A76B]/40"
+                        className="p-1.5 rounded bg-white/90 text-[#29241F] pointer-events-auto border border-[#E7DED0] hover:bg-white"
                       >
                         <ChevronLeft className="w-4 h-4" />
                       </button>
                       <button
                         onClick={(e) => handleNextImage(room.id, room.images.length, e)}
-                        className="p-1.5 rounded-full bg-[#102A26]/80 hover:bg-[#102A26] text-white pointer-events-auto border border-[#C6A76B]/40"
+                        className="p-1.5 rounded bg-white/90 text-[#29241F] pointer-events-auto border border-[#E7DED0] hover:bg-white"
                       >
                         <ChevronRight className="w-4 h-4" />
                       </button>
                     </div>
                   )}
 
-                  {/* Image Indicator Dots */}
+                  {/* Dot Indicators */}
                   <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10 pointer-events-none">
                     {room.images.map((_, i) => (
                       <span
                         key={i}
-                        className={`h-1.5 rounded-full transition-all ${
-                          i === currentImgIdx ? 'w-5 bg-[#C6A76B]' : 'w-1.5 bg-white/50'
+                        className={`h-1 rounded-full transition-all ${
+                          i === currentImgIdx ? 'w-4 bg-white' : 'w-1 bg-white/60'
                         }`}
                       />
                     ))}
                   </div>
                 </div>
 
-                {/* Card Content Details */}
-                <div className="p-5 md:p-6 space-y-4">
-                  {/* Rating & Inventory Alert */}
-                  <div className="flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-1.5 text-[#C6A76B] font-semibold">
-                      <Star className="w-3.5 h-3.5 fill-[#C6A76B] text-[#C6A76B]" />
-                      <span>{room.rating}</span>
-                      <span className="text-[#F6F1E7]/60 font-normal">({room.reviewsCount} reviews)</span>
-                    </div>
-
-                    <div className="flex items-center gap-1 text-[11px] font-mono">
-                      {isLowInventory ? (
-                        <span className="text-[#C6A76B] flex items-center gap-1 font-semibold">
-                          <Flame className="w-3.5 h-3.5 text-[#C6A76B] animate-pulse" />
-                          Only {room.availableInventory} left!
-                        </span>
-                      ) : (
-                        <span className="text-emerald-400 font-semibold">
-                          {room.availableInventory} available
-                        </span>
-                      )}
-                    </div>
+                {/* Card Details */}
+                <div className="p-6 space-y-4">
+                  <div className="flex items-center justify-between text-[11px] text-[#777066] font-mono">
+                    <span>{room.sizeSqFt} SQ FT</span>
+                    <span>{room.floor}</span>
+                    <span>UP TO {room.capacity.maxGuests} GUESTS</span>
                   </div>
 
-                  {/* Title & Tagline */}
                   <div>
-                    <h3 className="text-xl font-bold font-serif-luxury text-[#F6F1E7] group-hover:text-[#C6A76B] transition-colors">
+                    <h3 className="text-2xl font-normal font-serif-luxury text-[#29241F] group-hover:text-[#A77D4B] transition-colors">
                       {room.name}
                     </h3>
-                    <p className="text-xs text-[#F6F1E7]/75 mt-1 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-[#777066] mt-1.5 font-light leading-relaxed line-clamp-2">
                       {room.tagline}
                     </p>
                   </div>
 
-                  {/* Quick Specs Chips */}
-                  <div className="grid grid-cols-3 gap-2 py-2 border-y border-[#C6A76B]/20 text-[11px] text-[#F6F1E7]/80">
-                    <div className="flex items-center gap-1.5">
-                      <Maximize2 className="w-3.5 h-3.5 text-[#C6A76B] shrink-0" />
-                      <span>{room.sizeSqFt} sq ft</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Users className="w-3.5 h-3.5 text-[#C6A76B] shrink-0" />
-                      <span>Up to {room.capacity.maxGuests}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 truncate">
-                      <Bed className="w-3.5 h-3.5 text-[#C6A76B] shrink-0" />
-                      <span className="truncate">{room.floor}</span>
-                    </div>
-                  </div>
-
-                  {/* Amenities Badges */}
-                  <div className="flex flex-wrap gap-1.5">
-                    {room.amenities.slice(0, 3).map((amenity, i) => (
+                  {/* Privileges Preview */}
+                  <div className="pt-2 border-t border-[#E7DED0] flex flex-wrap gap-1.5">
+                    {room.amenities.slice(0, 3).map((amenity, idx) => (
                       <span
-                        key={i}
-                        className="px-2.5 py-1 rounded-lg text-[10px] font-medium bg-[#102A26] text-[#F6F1E7]/90 border border-[#C6A76B]/25"
+                        key={idx}
+                        className="px-2 py-0.5 rounded bg-[#F7F4EE] border border-[#E7DED0] text-[10px] text-[#777066]"
                       >
                         {amenity}
                       </span>
                     ))}
-                    {room.amenities.length > 3 && (
-                      <span className="px-2 py-1 rounded-lg text-[10px] text-[#C6A76B] font-mono">
-                        +{room.amenities.length - 3} more
-                      </span>
-                    )}
                   </div>
                 </div>
               </div>
 
-              {/* Bottom Actions & Price */}
-              <div className="p-5 md:p-6 pt-0 space-y-3">
-                <div className="flex items-baseline justify-between pt-2">
-                  <div>
-                    <span className="text-[10px] uppercase tracking-wider text-[#C6A76B] block font-mono">
-                      Exclusive Rate
-                    </span>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-2xl font-black text-[#C6A76B] font-mono">${room.pricePerNight}</span>
-                      <span className="text-xs text-[#F6F1E7]/70">/ night</span>
-                      {room.originalPrice && (
-                        <span className="text-xs text-[#F6F1E7]/50 line-through">${room.originalPrice}</span>
-                      )}
-                    </div>
+              {/* Bottom Actions */}
+              <div className="p-6 pt-0 space-y-4">
+                <div className="flex items-baseline justify-between pt-2 border-t border-[#E7DED0]">
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-[#777066]">
+                    Rate from
+                  </span>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-2xl font-normal font-serif-luxury text-[#29241F]">{formatINR(room.pricePerNight)}</span>
+                    <span className="text-xs text-[#777066]">/ night</span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2.5">
+                <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => setSelectedRoomFor3D(room)}
-                    className="py-3 px-3 rounded-xl bg-[#102A26] hover:bg-[#14332c] text-[#C6A76B] border border-[#C6A76B]/50 hover:border-[#C6A76B] text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-md"
+                    className="btn-outline-bronze text-center"
                   >
-                    <Eye className="w-4 h-4" />
-                    <span>3D Suite</span>
+                    3D Tour
                   </button>
 
                   <button
                     onClick={() => setSelectedRoomForBooking(room)}
-                    className="py-3 px-3 rounded-xl gold-gradient-btn text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-lg group"
+                    className="btn-primary-espresso flex items-center justify-center gap-1.5"
                   >
                     <span>Reserve</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
