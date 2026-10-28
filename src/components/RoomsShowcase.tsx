@@ -480,12 +480,12 @@ export const RoomsShowcase: React.FC = () => {
             className="relative w-full h-[580px] md:h-[760px] flex items-center justify-center overflow-visible cursor-grab active:cursor-grabbing orbit-container select-none"
           >
             {/* Large Luxury Branding Watermark in Absolute Background */}
-            <div className="absolute z-0 text-center pointer-events-none opacity-15 md:opacity-20 select-none">
-              <h3 className="text-6xl sm:text-8xl md:text-[14rem] font-extrabold uppercase tracking-[0.25em] leading-none font-serif bg-clip-text text-transparent bg-gradient-to-b from-[#A77D4B] to-[#29241F] drop-shadow-[0_8px_16px_rgba(167,125,75,0.12)]">
-                BENCHMARK
+            <div className="absolute z-0 text-center pointer-events-none opacity-15 md:opacity-20 select-none flex flex-col items-center justify-center">
+              <h3 className="text-7xl sm:text-9xl md:text-[13rem] font-extrabold tracking-[0.15em] leading-none font-serif-luxury bg-clip-text text-transparent bg-gradient-to-b from-[#A77D4B] to-[#29241F] drop-shadow-[0_8px_16px_rgba(167,125,75,0.12)]">
+                BM
               </h3>
-              <p className="text-[10px] md:text-xs font-mono uppercase tracking-[0.35em] text-[#777066] mt-1">
-                CHARING CROSS • THE NILGIRIS
+              <p className="text-[10px] md:text-xs font-mono uppercase tracking-[0.35em] text-[#777066] mt-2">
+                BENCHMARK RESIDENCES • OOTY
               </p>
             </div>
 
